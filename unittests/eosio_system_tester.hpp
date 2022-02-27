@@ -35,22 +35,22 @@ public:
 
       produce_blocks( 2 );
 
-      create_accounts({ N(eosio.token), N(eosio.ram), N(eosio.ramfee), N(eosio.stake),
-               N(eosio.bpay), N(eosio.vpay), N(eosio.saving), N(eosio.names) });
+      create_accounts({ N(zswhq.token), N(zswhq.ram), N(zswhq.ramfee), N(zswhq.stake),
+               N(zswhq.bpay), N(zswhq.vpay), N(zswhq.saving), N(zswhq.names) });
 
       produce_blocks( 100 );
 
-      set_code( N(eosio.token), contracts::eosio_token_wasm() );
-      set_abi( N(eosio.token), contracts::eosio_token_abi().data() );
+      set_code( N(zswhq.token), contracts::eosio_token_wasm() );
+      set_abi( N(zswhq.token), contracts::eosio_token_abi().data() );
 
       {
-         const auto& accnt = control->db().get<account_object,by_name>( N(eosio.token) );
+         const auto& accnt = control->db().get<account_object,by_name>( N(zswhq.token) );
          abi_def abi;
          BOOST_REQUIRE_EQUAL(abi_serializer::to_abi(accnt.abi, abi), true);
          token_abi_ser.set_abi(abi, abi_serializer::create_yield_function( abi_serializer_max_time ));
       }
 
-      create_currency( N(eosio.token), config::system_account_name, core_from_string("10000000000.0000") );
+      create_currency( N(zswhq.token), config::system_account_name, core_from_string("10000000000.0000") );
       issue(config::system_account_name,      core_from_string("1000000000.0000"));
       BOOST_REQUIRE_EQUAL( core_from_string("1000000000.0000"), get_balance( name("eosio") ) );
 
@@ -76,7 +76,7 @@ public:
       create_account_with_resources( N(carol1111111), config::system_account_name, core_from_string("1.0000"), false );
 
       BOOST_REQUIRE_EQUAL( core_from_string("1000000000.0000"),
-            get_balance(name("eosio")) + get_balance(name("eosio.ramfee")) + get_balance(name("eosio.stake")) + get_balance(name("eosio.ram")) );
+            get_balance(name("eosio")) + get_balance(name("zswhq.ramfee")) + get_balance(name("zswhq.stake")) + get_balance(name("zswhq.ram")) );
    }
 
    action_result open( account_name  owner,
@@ -333,7 +333,7 @@ public:
    }
 
    asset get_balance( const account_name& act ) {
-      vector<char> data = get_row_by_account( N(eosio.token), act, N(accounts), name(symbol(CORE_SYMBOL).to_symbol_code().value) );
+      vector<char> data = get_row_by_account( N(zswhq.token), act, N(accounts), name(symbol(CORE_SYMBOL).to_symbol_code().value) );
       return data.empty() ? asset(0, symbol(CORE_SYMBOL)) : token_abi_ser.binary_to_variant("account", data, abi_serializer::create_yield_function( abi_serializer_max_time ))["balance"].as<asset>();
    }
 
@@ -361,14 +361,14 @@ public:
    }
 
    void issue( name to, const asset& amount, name manager = config::system_account_name ) {
-      base_tester::push_action( N(eosio.token), N(issue), manager, mutable_variant_object()
+      base_tester::push_action( N(zswhq.token), N(issue), manager, mutable_variant_object()
                                 ("to",      to )
                                 ("quantity", amount )
                                 ("memo", "")
                                 );
    }
    void transfer( name from, name to, const asset& amount, name manager = config::system_account_name ) {
-      base_tester::push_action( N(eosio.token), N(transfer), manager, mutable_variant_object()
+      base_tester::push_action( N(zswhq.token), N(transfer), manager, mutable_variant_object()
                                 ("from",    from)
                                 ("to",      to )
                                 ("quantity", amount)
@@ -388,7 +388,7 @@ public:
    fc::variant get_stats( const string& symbolname ) {
       auto symb = eosio::chain::symbol::from_string(symbolname);
       auto symbol_code = symb.to_symbol_code().value;
-      vector<char> data = get_row_by_account( N(eosio.token), name(symbol_code), N(stat), name(symbol_code) );
+      vector<char> data = get_row_by_account( N(zswhq.token), name(symbol_code), N(stat), name(symbol_code) );
       return data.empty() ? fc::variant() : token_abi_ser.binary_to_variant( "currency_stats", data, abi_serializer::create_yield_function( abi_serializer_max_time ) );
    }
 
@@ -411,21 +411,21 @@ public:
    abi_serializer initialize_multisig() {
       abi_serializer msig_abi_ser;
       {
-         create_account_with_resources( N(eosio.msig), config::system_account_name );
-         BOOST_REQUIRE_EQUAL( success(), buyram( name("eosio"), name("eosio.msig"), core_from_string("5000.0000") ) );
+         create_account_with_resources( N(zswhq.msig), config::system_account_name );
+         BOOST_REQUIRE_EQUAL( success(), buyram( name("eosio"), name("zswhq.msig"), core_from_string("5000.0000") ) );
          produce_block();
 
          auto trace = base_tester::push_action(config::system_account_name, N(setpriv),
                                                config::system_account_name,  mutable_variant_object()
-                                               ("account", "eosio.msig")
+                                               ("account", "zswhq.msig")
                                                ("is_priv", 1)
          );
 
-         set_code( N(eosio.msig), contracts::eosio_msig_wasm() );
-         set_abi( N(eosio.msig), contracts::eosio_msig_abi().data() );
+         set_code( N(zswhq.msig), contracts::eosio_msig_wasm() );
+         set_abi( N(zswhq.msig), contracts::eosio_msig_abi().data() );
 
          produce_blocks();
-         const auto& accnt = control->db().get<account_object,by_name>( N(eosio.msig) );
+         const auto& accnt = control->db().get<account_object,by_name>( N(zswhq.msig) );
          abi_def msig_abi;
          BOOST_REQUIRE_EQUAL(abi_serializer::to_abi(accnt.abi, msig_abi), true);
          msig_abi_ser.set_abi(msig_abi, abi_serializer::create_yield_function( abi_serializer_max_time ));

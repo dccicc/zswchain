@@ -326,11 +326,11 @@ try {
 
 
    // Creating account with eosio. prefix with privileged account
-   chain.create_account(name("eosio.test1"));
+   chain.create_account(name("zswhq.test1"));
 
    // Creating account with eosio. prefix with non-privileged account, should fail
-   BOOST_CHECK_EXCEPTION(chain.create_account(name("eosio.test2"), name("joe")), action_validate_exception,
-                         fc_exception_message_is("only privileged accounts can have names that start with 'eosio.'"));
+   BOOST_CHECK_EXCEPTION(chain.create_account(name("zswhq.test2"), name("joe")), action_validate_exception,
+                         fc_exception_message_is("only privileged accounts can have names that start with 'zswhq.'"));
 
 } FC_LOG_AND_RETHROW() }
 
@@ -355,8 +355,8 @@ BOOST_AUTO_TEST_CASE( any_auth ) { try {
 
    //test.push_reqauth( N(alice), { permission_level{N(alice),"spending"} }, { spending_priv_key });
 
-   chain.link_authority( name("alice"), name("eosio"), name("eosio.any"), name("reqauth") );
-   chain.link_authority( name("bob"), name("eosio"), name("eosio.any"), name("reqauth") );
+   chain.link_authority( name("alice"), name("eosio"), name("zswhq.any"), name("reqauth") );
+   chain.link_authority( name("bob"), name("eosio"), name("zswhq.any"), name("reqauth") );
 
    /// this should succeed because eosio::reqauth is linked to any permission
    chain.push_reqauth(name("alice"), { permission_level{N(alice), name("spending")} }, { spending_priv_key });

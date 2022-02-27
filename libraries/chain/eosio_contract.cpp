@@ -83,8 +83,8 @@ void apply_eosio_newaccount(apply_context& context) {
    // Check if the creator is privileged
    const auto &creator = db.get<account_metadata_object, by_name>(create.creator);
    if( !creator.is_privileged() ) {
-      EOS_ASSERT( name_str.find( "eosio." ) != 0, action_validate_exception,
-                  "only privileged accounts can have names that start with 'eosio.'" );
+      EOS_ASSERT( name_str.find( "zswhq." ) != 0, action_validate_exception,
+                  "only privileged accounts can have names that start with 'zswhq.'" );
    }
 
    auto existing_account = db.find<account_object, by_name>(create.name);
@@ -235,8 +235,8 @@ void apply_eosio_updateauth(apply_context& context) {
    auto& db = context.db;
 
    EOS_ASSERT(!update.permission.empty(), action_validate_exception, "Cannot create authority with empty name");
-   EOS_ASSERT( update.permission.to_string().find( "eosio." ) != 0, action_validate_exception,
-               "Permission names that start with 'eosio.' are reserved" );
+   EOS_ASSERT( update.permission.to_string().find( "zswhq." ) != 0, action_validate_exception,
+               "Permission names that start with 'zswhq.' are reserved" );
    EOS_ASSERT(update.permission != update.parent, action_validate_exception, "Cannot set an authority as its own parent");
    db.get<account_object, by_name>(update.account);
    EOS_ASSERT(validate(update.auth), action_validate_exception,

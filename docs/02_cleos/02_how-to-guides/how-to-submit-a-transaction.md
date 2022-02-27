@@ -24,7 +24,7 @@ Push a transaction
   "delay_sec": 0,
   "context_free_actions": [],
   "actions": [{
-      "account": "eosio.token",
+      "account": "zswhq.token",
       "name": "transfer",
       "authorization": [{
           "actor": "han",
@@ -54,7 +54,7 @@ Push a transaction
   "delay_sec": 0,
   "context_free_actions": [],
   "actions": [{
-      "account": "eosio.token",
+      "account": "zswhq.token",
       "name": "transfer",
       "authorization": [{
           "actor": "han",

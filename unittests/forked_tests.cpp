@@ -140,25 +140,25 @@ BOOST_AUTO_TEST_CASE( forking ) try {
    wlog("set producer schedule to [dan,sam,pam]");
    c.produce_blocks(30);
 
-   auto r2 = c.create_accounts( {N(eosio.token)} );
+   auto r2 = c.create_accounts( {N(zswhq.token)} );
    wdump((fc::json::to_pretty_string(r2)));
-   c.set_code( N(eosio.token), contracts::eosio_token_wasm() );
-   c.set_abi( N(eosio.token), contracts::eosio_token_abi().data() );
+   c.set_code( N(zswhq.token), contracts::eosio_token_wasm() );
+   c.set_abi( N(zswhq.token), contracts::eosio_token_abi().data() );
    c.produce_blocks(10);
 
 
-   auto cr = c.push_action( N(eosio.token), N(create), N(eosio.token), mutable_variant_object()
+   auto cr = c.push_action( N(zswhq.token), N(create), N(zswhq.token), mutable_variant_object()
               ("issuer",       "eosio" )
               ("maximum_supply", core_from_string("10000000.0000"))
       );
 
-   cr = c.push_action( N(eosio.token), N(issue), config::system_account_name, mutable_variant_object()
+   cr = c.push_action( N(zswhq.token), N(issue), config::system_account_name, mutable_variant_object()
               ("to",       "eosio" )
               ("quantity", core_from_string("100.0000"))
               ("memo", "")
       );
 
-   cr = c.push_action( N(eosio.token), N(transfer), config::system_account_name, mutable_variant_object()
+   cr = c.push_action( N(zswhq.token), N(transfer), config::system_account_name, mutable_variant_object()
               ("from",     "eosio")
               ("to",       "dan" )
               ("quantity", core_from_string("100.0000"))

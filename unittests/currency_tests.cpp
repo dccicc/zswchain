@@ -32,7 +32,7 @@ class currency_tester : public TESTER {
          string action_type_name = abi_ser.get_action_type(name);
 
          action act;
-         act.account = N(eosio.token);
+         act.account = N(zswhq.token);
          act.name = name;
          act.authorization = vector<permission_level>{{signer, config::active_name}};
          act.data = abi_ser.variant_to_binary(action_type_name, data, abi_serializer::create_yield_function( abi_serializer_max_time ));
@@ -46,7 +46,7 @@ class currency_tester : public TESTER {
       }
 
       asset get_balance(const account_name& account) const {
-         return get_currency_balance(N(eosio.token), symbol(SY(4,CUR)), account);
+         return get_currency_balance(N(zswhq.token), symbol(SY(4,CUR)), account);
       }
 
       auto transfer(const account_name& from, const account_name& to, const std::string& quantity, const std::string& memo = "") {
@@ -61,7 +61,7 @@ class currency_tester : public TESTER {
       }
 
       auto issue(const account_name& to, const std::string& quantity, const std::string& memo = "") {
-         auto trace = push_action(N(eosio.token), N(issue), mutable_variant_object()
+         auto trace = push_action(N(zswhq.token), N(issue), mutable_variant_object()
                                   ("to",       to)
                                   ("quantity", quantity)
                                   ("memo",     memo)
@@ -73,10 +73,10 @@ class currency_tester : public TESTER {
       currency_tester()
          :TESTER(),abi_ser(json::from_string(contracts::eosio_token_abi().data()).as<abi_def>(), abi_serializer::create_yield_function( abi_serializer_max_time ))
       {
-         create_account( N(eosio.token));
-         set_code( N(eosio.token), contracts::eosio_token_wasm() );
+         create_account( N(zswhq.token));
+         set_code( N(zswhq.token), contracts::eosio_token_wasm() );
 
-         auto result = push_action(N(eosio.token), N(create), mutable_variant_object()
+         auto result = push_action(N(zswhq.token), N(create), mutable_variant_object()
                  ("issuer",       eosio_token)
                  ("maximum_supply", "1000000000.0000 CUR")
                  ("can_freeze", 0)
@@ -85,7 +85,7 @@ class currency_tester : public TESTER {
          );
          wdump((result));
 
-         result = push_action(N(eosio.token), N(issue), mutable_variant_object()
+         result = push_action(N(zswhq.token), N(issue), mutable_variant_object()
                  ("to",       eosio_token)
                  ("quantity", "1000000.0000 CUR")
                  ("memo", "gggggggggggg")
@@ -98,14 +98,14 @@ class currency_tester : public TESTER {
       static const name eosio_token;
 };
 
-const name currency_tester::eosio_token = N(eosio.token);
+const name currency_tester::eosio_token = N(zswhq.token);
 
 BOOST_AUTO_TEST_SUITE(currency_tests)
 
 BOOST_AUTO_TEST_CASE( bootstrap ) try {
    auto expected = asset::from_string( "1000000.0000 CUR" );
    currency_tester t;
-   auto actual = t.get_currency_balance(N(eosio.token), expected.get_symbol(), N(eosio.token));
+   auto actual = t.get_currency_balance(N(zswhq.token), expected.get_symbol(), N(zswhq.token));
    BOOST_REQUIRE_EQUAL(expected, actual);
 } FC_LOG_AND_RETHROW() /// test_api_bootstrap
 
@@ -114,7 +114,7 @@ BOOST_FIXTURE_TEST_CASE( test_transfer, currency_tester ) try {
 
    // make a transfer from the contract to a user
    {
-      auto trace = push_action(N(eosio.token), N(transfer), mutable_variant_object()
+      auto trace = push_action(N(zswhq.token), N(transfer), mutable_variant_object()
          ("from", eosio_token)
          ("to",   "alice")
          ("quantity", "100.0000 CUR")
@@ -131,14 +131,14 @@ BOOST_FIXTURE_TEST_CASE( test_transfer, currency_tester ) try {
 BOOST_FIXTURE_TEST_CASE( test_duplicate_transfer, currency_tester ) {
    create_accounts( {N(alice)} );
 
-   auto trace = push_action(N(eosio.token), N(transfer), mutable_variant_object()
+   auto trace = push_action(N(zswhq.token), N(transfer), mutable_variant_object()
       ("from", eosio_token)
       ("to",   "alice")
       ("quantity", "100.0000 CUR")
       ("memo", "fund Alice")
    );
 
-   BOOST_REQUIRE_THROW(push_action(N(eosio.token), N(transfer), mutable_variant_object()
+   BOOST_REQUIRE_THROW(push_action(N(zswhq.token), N(transfer), mutable_variant_object()
                                     ("from", eosio_token)
                                     ("to",   "alice")
                                     ("quantity", "100.0000 CUR")
@@ -156,7 +156,7 @@ BOOST_FIXTURE_TEST_CASE( test_addtransfer, currency_tester ) try {
 
    // make a transfer from the contract to a user
    {
-      auto trace = push_action(N(eosio.token), N(transfer), mutable_variant_object()
+      auto trace = push_action(N(zswhq.token), N(transfer), mutable_variant_object()
          ("from", eosio_token)
          ("to",   "alice")
          ("quantity", "100.0000 CUR")
@@ -171,7 +171,7 @@ BOOST_FIXTURE_TEST_CASE( test_addtransfer, currency_tester ) try {
 
    // make a transfer from the contract to a user
    {
-      auto trace = push_action(N(eosio.token), N(transfer), mutable_variant_object()
+      auto trace = push_action(N(zswhq.token), N(transfer), mutable_variant_object()
          ("from", eosio_token)
          ("to",   "alice")
          ("quantity", "10.0000 CUR")
@@ -191,7 +191,7 @@ BOOST_FIXTURE_TEST_CASE( test_overspend, currency_tester ) try {
 
    // make a transfer from the contract to a user
    {
-      auto trace = push_action(N(eosio.token), N(transfer), mutable_variant_object()
+      auto trace = push_action(N(zswhq.token), N(transfer), mutable_variant_object()
          ("from", eosio_token)
          ("to",   "alice")
          ("quantity", "100.0000 CUR")
@@ -226,7 +226,7 @@ BOOST_FIXTURE_TEST_CASE( test_fullspend, currency_tester ) try {
 
    // make a transfer from the contract to a user
    {
-      auto trace = push_action(N(eosio.token), N(transfer), mutable_variant_object()
+      auto trace = push_action(N(zswhq.token), N(transfer), mutable_variant_object()
          ("from", eosio_token)
          ("to",   "alice")
          ("quantity", "100.0000 CUR")
@@ -431,7 +431,7 @@ BOOST_FIXTURE_TEST_CASE( test_proxy, currency_tester ) try {
    // for now wasm "time" is in seconds, so we have to truncate off any parts of a second that may have applied
    fc::time_point expected_delivery(fc::seconds(control->head_block_time().sec_since_epoch()) + fc::seconds(10));
    {
-      auto trace = push_action(N(eosio.token), N(transfer), mutable_variant_object()
+      auto trace = push_action(N(zswhq.token), N(transfer), mutable_variant_object()
          ("from", eosio_token)
          ("to",   "proxy")
          ("quantity", "5.0000 CUR")
@@ -486,7 +486,7 @@ BOOST_FIXTURE_TEST_CASE( test_deferred_failure, currency_tester ) try {
    const auto& index = control->db().get_index<generated_transaction_multi_index,by_trx_id>();
    BOOST_REQUIRE_EQUAL(0, index.size());
 
-   auto trace = push_action(N(eosio.token), N(transfer), mutable_variant_object()
+   auto trace = push_action(N(zswhq.token), N(transfer), mutable_variant_object()
       ("from", eosio_token)
       ("to",   "proxy")
       ("quantity", "5.0000 CUR")

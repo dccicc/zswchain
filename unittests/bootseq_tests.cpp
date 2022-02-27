@@ -163,7 +163,7 @@ public:
     }
 
     asset get_balance( const account_name& act ) {
-         return get_currency_balance(N(eosio.token), symbol(CORE_SYMBOL), act);
+         return get_currency_balance(N(zswhq.token), symbol(CORE_SYMBOL), act);
     }
 
     void set_code_abi(const account_name& account, const vector<uint8_t>& wasm, const char* abi, const private_key_type* signer = nullptr) {
@@ -189,38 +189,38 @@ BOOST_FIXTURE_TEST_CASE( bootseq_test, bootseq_tester ) {
     try {
 
         // Create eosio.msig and eosio.token
-        create_accounts({N(eosio.msig), N(eosio.token), N(eosio.ram), N(eosio.ramfee), N(eosio.stake), N(eosio.vpay), N(eosio.bpay), N(eosio.saving) });
+        create_accounts({N(zswhq.msig), N(zswhq.token), N(zswhq.ram), N(zswhq.ramfee), N(zswhq.stake), N(zswhq.vpay), N(zswhq.bpay), N(zswhq.saving) });
         // Set code for the following accounts:
         //  - eosio (code: eosio.bios) (already set by tester constructor)
         //  - eosio.msig (code: eosio.msig)
         //  - eosio.token (code: eosio.token)
-        // set_code_abi(N(eosio.msig), contracts::eosio_msig_wasm(), contracts::eosio_msig_abi().data());//, &eosio_active_pk);
-        // set_code_abi(N(eosio.token), contracts::eosio_token_wasm(), contracts::eosio_token_abi().data()); //, &eosio_active_pk);
+        // set_code_abi(N(zswhq.msig), contracts::eosio_msig_wasm(), contracts::eosio_msig_abi().data());//, &eosio_active_pk);
+        // set_code_abi(N(zswhq.token), contracts::eosio_token_wasm(), contracts::eosio_token_abi().data()); //, &eosio_active_pk);
 
-        set_code_abi(N(eosio.msig),
+        set_code_abi(N(zswhq.msig),
                      contracts::eosio_msig_wasm(),
                      contracts::eosio_msig_abi().data());//, &eosio_active_pk);
-        set_code_abi(N(eosio.token),
+        set_code_abi(N(zswhq.token),
                      contracts::eosio_token_wasm(),
                      contracts::eosio_token_abi().data()); //, &eosio_active_pk);
 
         // Set privileged for eosio.msig and eosio.token
-        set_privileged(N(eosio.msig));
-        set_privileged(N(eosio.token));
+        set_privileged(N(zswhq.msig));
+        set_privileged(N(zswhq.token));
 
         // Verify eosio.msig and eosio.token is privileged
-        const auto& eosio_msig_acc = get<account_metadata_object, by_name>(N(eosio.msig));
+        const auto& eosio_msig_acc = get<account_metadata_object, by_name>(N(zswhq.msig));
         BOOST_TEST(eosio_msig_acc.is_privileged() == true);
-        const auto& eosio_token_acc = get<account_metadata_object, by_name>(N(eosio.token));
+        const auto& eosio_token_acc = get<account_metadata_object, by_name>(N(zswhq.token));
         BOOST_TEST(eosio_token_acc.is_privileged() == true);
 
 
         // Create SYS tokens in eosio.token, set its manager as eosio
         auto max_supply = core_from_string("10000000000.0000"); /// 1x larger than 1B initial tokens
         auto initial_supply = core_from_string("1000000000.0000"); /// 1x larger than 1B initial tokens
-        create_currency(N(eosio.token), config::system_account_name, max_supply);
+        create_currency(N(zswhq.token), config::system_account_name, max_supply);
         // Issue the genesis supply of 1 billion SYS tokens to eosio.system
-        issue(N(eosio.token), config::system_account_name, config::system_account_name, initial_supply);
+        issue(N(zswhq.token), config::system_account_name, config::system_account_name, initial_supply);
 
         auto actual = get_balance(config::system_account_name);
         BOOST_REQUIRE_EQUAL(initial_supply, actual);
@@ -242,7 +242,7 @@ BOOST_FIXTURE_TEST_CASE( bootseq_test, bootseq_tester ) {
            auto r = buyram(config::system_account_name, a.aname, asset(ram));
            BOOST_REQUIRE( !r->except_ptr );
 
-           r = delegate_bandwidth(N(eosio.stake), a.aname, asset(net), asset(cpu));
+           r = delegate_bandwidth(N(zswhq.stake), a.aname, asset(net), asset(cpu));
            BOOST_REQUIRE( !r->except_ptr );
         }
 

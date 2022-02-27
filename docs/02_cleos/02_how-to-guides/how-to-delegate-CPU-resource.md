@@ -41,7 +41,7 @@ cleos system delegatebw bob alice "0 SYS" "0.01 SYS"
 ```json
 executed transaction: 5487afafd67bf459a20fcc2dbc5d0c2f0d1f10e33123eaaa07088046fd18e3ae  192 bytes  503 us
 #         eosio <= eosio::delegatebw            {"from":"bob","receiver":"alice","stake_net_quantity":"0.0000 SYS","stake_cpu_quantity":"0.0100 SYS"...
-#   eosio.token <= eosio.token::transfer        {"from":"bob","to":"eosio.stake","quantity":"0.0010 SYS","memo":"stake bandwidth"}
-#  bob <= eosio.token::transfer        {"from":"bob","to":"eosio.stake","quantity":"0.0010 SYS","memo":"stake bandwidth"}
-#   eosio.stake <= eosio.token::transfer        {"from":"bob","to":"eosio.stake","quantity":"0.0010 SYS","memo":"stake bandwidth"}
+#   eosio.token <= eosio.token::transfer        {"from":"bob","to":"zswhq.stake","quantity":"0.0010 SYS","memo":"stake bandwidth"}
+#  bob <= eosio.token::transfer        {"from":"bob","to":"zswhq.stake","quantity":"0.0010 SYS","memo":"stake bandwidth"}
+#   eosio.stake <= eosio.token::transfer        {"from":"bob","to":"zswhq.stake","quantity":"0.0010 SYS","memo":"stake bandwidth"}
 ```

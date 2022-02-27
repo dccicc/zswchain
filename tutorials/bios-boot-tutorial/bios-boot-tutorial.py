@@ -17,16 +17,16 @@ unlockTimeout = 999999999
 fastUnstakeSystem = './fast.refund/eosio.system/eosio.system.wasm'
 
 systemAccounts = [
-    'eosio.bpay',
-    'eosio.msig',
-    'eosio.names',
-    'eosio.ram',
-    'eosio.ramfee',
-    'eosio.saving',
-    'eosio.stake',
-    'eosio.token',
-    'eosio.vpay',
-    'eosio.rex',
+    'zswhq.bpay',
+    'zswhq.msig',
+    'zswhq.names',
+    'zswhq.ram',
+    'zswhq.ramfee',
+    'zswhq.saving',
+    'zswhq.stake',
+    'zswhq.token',
+    'zswhq.vpay',
+    'zswhq.rex',
 ]
 
 def jsonArg(a):
@@ -337,7 +337,7 @@ def stepSetSystemContract():
     retry(args.cleos + 'push action eosio activate \'["299dcb6af692324b899b39f16d5a530a33062804e41f09dc97e9f156b4476707"]\' -p eosio@active')
     sleep(1)
 
-    run(args.cleos + 'push action eosio setpriv' + jsonArg(['eosio.msig', 1]) + '-p eosio@active')
+    run(args.cleos + 'push action eosio setpriv' + jsonArg(['zswhq.msig', 1]) + '-p eosio@active')
 
     # install eosio.system latest version
     retry(args.cleos + 'set contract eosio ' + args.contracts_dir + '/eosio.system/')
@@ -363,7 +363,7 @@ def stepVote():
 def stepProxyVotes():
     proxyVotes(0, 0 + args.num_voters)
 def stepResign():
-    resign('eosio', 'eosio.prods')
+    resign('eosio', 'zswhq.prods')
     for a in systemAccounts:
         resign(a, 'eosio')
 def stepTransfer():

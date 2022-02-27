@@ -13,9 +13,9 @@ set parameters dealing with account permissions
 
 `-h,--help` Print this help message and exit
 
-`--add-code` [code] add 'eosio.code' permission to specified permission authority
+`--add-code` [code] add 'zswhq.code' permission to specified permission authority
 
-`--remove-code` [code] remove 'eosio.code' permission from specified permission authority
+`--remove-code` [code] remove 'zswhq.code' permission from specified permission authority
 
 `-x,--expiration` _TEXT_ - set the time in seconds before a transaction expires, defaults to 30s
 
