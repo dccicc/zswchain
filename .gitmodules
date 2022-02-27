@@ -9,10 +9,6 @@
 [submodule "libraries/softfloat"]
 	path = libraries/softfloat
 	url = https://github.com/eosio/berkeley-softfloat-3
-[submodule "libraries/fc"]
-	path = libraries/fc
-	url = https://github.com/invisible-train-40/fc
-	branch = updkeymain
 [submodule "libraries/wabt"]
 	path = libraries/wabt
 	url = https://github.com/EOSIO/wabt
@@ -22,6 +18,10 @@
 [submodule "libraries/eos-vm"]
 	path = libraries/eos-vm
 	url = https://github.com/eosio/eos-vm
+[submodule "libraries/fc"]
+	path = libraries/fc
+	url = https://github.com/invisible-train-40/fc
+	branch = updkeymain
 [submodule "eosio-wasm-spec-tests"]
 	path = eosio-wasm-spec-tests
 	url = https://github.com/EOSIO/eosio-wasm-spec-tests
