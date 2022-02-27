@@ -12,6 +12,7 @@
 [submodule "libraries/fc"]
 	path = libraries/fc
 	url = https://github.com/invisible-train-40/fc
+	branch = updkeymain
 [submodule "libraries/wabt"]
 	path = libraries/wabt
 	url = https://github.com/EOSIO/wabt
