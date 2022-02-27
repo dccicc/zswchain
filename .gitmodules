@@ -21,3 +21,7 @@
 [submodule "eosio-wasm-spec-tests"]
 	path = eosio-wasm-spec-tests
 	url = https://github.com/EOSIO/eosio-wasm-spec-tests
+[submodule "libraries/fc"]
+	path = libraries/fc
+	url = https://github.com/invisible-train-40/fc
+	branch = updkeymain
