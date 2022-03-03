@@ -135,7 +135,7 @@ node0=cluster.getNode(0)
 
 # eosio should have the same key as defproducera
 eosio = copy.copy(defproduceraAccount)
-eosio.name = "eosio"
+eosio.name = "zswhq"
 
 Print("Info of each node:")
 for i in range(len(hosts)):
@@ -145,8 +145,8 @@ for i in range(len(hosts)):
     Print("host %s: %s" % (hosts[i], trans))
 
 
-wasmFile="zswhq.system.wasm"
-abiFile="zswhq.system.abi"
+wasmFile="eosio.system.wasm"
+abiFile="eosio.system.abi"
 Print("\nPush system contract %s %s" % (wasmFile, abiFile))
 trans=node0.publishContract(eosio.name, wasmFile, abiFile, waitForTransBlock=True)
 if trans is None:
