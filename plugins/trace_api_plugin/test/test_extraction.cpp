@@ -368,7 +368,7 @@ BOOST_AUTO_TEST_SUITE(block_extraction)
                   {
                      {
                         0,
-                        "zswhq.token"_n, "eosio"_n, "onerror"_n,
+                        "zswhq.token"_n, "zswhq"_n, "onerror"_n,
                         {{ "alice"_n, "active"_n }},
                         make_onerror_data( chain::onerror{ 1, "test ", 4 } )
                      }

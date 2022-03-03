@@ -378,7 +378,7 @@ void print_action( const fc::variant& at ) {
    auto console = at["console"].as_string();
 
    /*
-   if( code == "eosio" && func == "setcode" )
+   if( code == "zswhq" && func == "setcode" )
       args = args.substr(40)+"...";
    if( name(code) == config::system_account_name && func == "setabi" )
       args = args.substr(40)+"...";
@@ -1519,7 +1519,7 @@ struct bidname_info_subcommand {
       list_producers->add_option("newname", newname, localized("The bidding name"))->required();
       list_producers->callback([this] {
          auto rawResult = call(get_table_func, fc::mutable_variant_object("json", true)
-                               ("code", "eosio")("scope", "eosio")("table", "namebids")
+                               ("code", "zswhq")("scope", "zswhq")("table", "namebids")
                                ("lower_bound", name(newname).to_uint64_t())
                                ("upper_bound", name(newname).to_uint64_t() + 1)
                                // Less than ideal upper_bound usage preserved so cleos can still work with old buggy nodeos versions

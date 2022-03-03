@@ -148,18 +148,18 @@ BOOST_AUTO_TEST_CASE( forking ) try {
 
 
    auto cr = c.push_action( N(zswhq.token), N(create), N(zswhq.token), mutable_variant_object()
-              ("issuer",       "eosio" )
+              ("issuer",       "zswhq" )
               ("maximum_supply", core_from_string("10000000.0000"))
       );
 
    cr = c.push_action( N(zswhq.token), N(issue), config::system_account_name, mutable_variant_object()
-              ("to",       "eosio" )
+              ("to",       "zswhq" )
               ("quantity", core_from_string("100.0000"))
               ("memo", "")
       );
 
    cr = c.push_action( N(zswhq.token), N(transfer), config::system_account_name, mutable_variant_object()
-              ("from",     "eosio")
+              ("from",     "zswhq")
               ("to",       "dan" )
               ("quantity", core_from_string("100.0000"))
               ("memo", "")

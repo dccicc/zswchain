@@ -710,11 +710,11 @@ BOOST_AUTO_TEST_CASE( fix_linkauth_restriction ) { try {
       );
    };
 
-   validate_disallow("eosio", "linkauth");
-   validate_disallow("eosio", "unlinkauth");
-   validate_disallow("eosio", "deleteauth");
-   validate_disallow("eosio", "updateauth");
-   validate_disallow("eosio", "canceldelay");
+   validate_disallow("zswhq", "linkauth");
+   validate_disallow("zswhq", "unlinkauth");
+   validate_disallow("zswhq", "deleteauth");
+   validate_disallow("zswhq", "updateauth");
+   validate_disallow("zswhq", "canceldelay");
 
    validate_disallow("currency", "linkauth");
    validate_disallow("currency", "unlinkauth");
@@ -737,11 +737,11 @@ BOOST_AUTO_TEST_CASE( fix_linkauth_restriction ) { try {
             ("requirement", "first"));
    };
 
-   validate_disallow("eosio", "linkauth");
-   validate_disallow("eosio", "unlinkauth");
-   validate_disallow("eosio", "deleteauth");
-   validate_disallow("eosio", "updateauth");
-   validate_disallow("eosio", "canceldelay");
+   validate_disallow("zswhq", "linkauth");
+   validate_disallow("zswhq", "unlinkauth");
+   validate_disallow("zswhq", "deleteauth");
+   validate_disallow("zswhq", "updateauth");
+   validate_disallow("zswhq", "canceldelay");
 
    validate_allowed("currency", "linkauth");
    validate_allowed("currency", "unlinkauth");

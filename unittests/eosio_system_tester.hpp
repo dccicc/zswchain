@@ -52,7 +52,7 @@ public:
 
       create_currency( N(zswhq.token), config::system_account_name, core_from_string("10000000000.0000") );
       issue(config::system_account_name,      core_from_string("1000000000.0000"));
-      BOOST_REQUIRE_EQUAL( core_from_string("1000000000.0000"), get_balance( name("eosio") ) );
+      BOOST_REQUIRE_EQUAL( core_from_string("1000000000.0000"), get_balance( name("zswhq") ) );
 
       set_code( config::system_account_name, contracts::eosio_system_wasm() );
       set_abi( config::system_account_name, contracts::eosio_system_abi().data() );
@@ -76,7 +76,7 @@ public:
       create_account_with_resources( N(carol1111111), config::system_account_name, core_from_string("1.0000"), false );
 
       BOOST_REQUIRE_EQUAL( core_from_string("1000000000.0000"),
-            get_balance(name("eosio")) + get_balance(name("zswhq.ramfee")) + get_balance(name("zswhq.stake")) + get_balance(name("zswhq.ram")) );
+            get_balance(name("zswhq")) + get_balance(name("zswhq.ramfee")) + get_balance(name("zswhq.stake")) + get_balance(name("zswhq.ram")) );
    }
 
    action_result open( account_name  owner,
@@ -412,7 +412,7 @@ public:
       abi_serializer msig_abi_ser;
       {
          create_account_with_resources( N(zswhq.msig), config::system_account_name );
-         BOOST_REQUIRE_EQUAL( success(), buyram( name("eosio"), name("zswhq.msig"), core_from_string("5000.0000") ) );
+         BOOST_REQUIRE_EQUAL( success(), buyram( name("zswhq"), name("zswhq.msig"), core_from_string("5000.0000") ) );
          produce_block();
 
          auto trace = base_tester::push_action(config::system_account_name, N(setpriv),
@@ -435,7 +435,7 @@ public:
 
    vector<name> active_and_vote_producers() {
       //stake more than 15% of total EOS supply to activate chain
-      transfer( name("eosio"), name("alice1111111"), core_from_string("650000000.0000"), name("eosio") );
+      transfer( name("zswhq"), name("alice1111111"), core_from_string("650000000.0000"), name("zswhq") );
       BOOST_REQUIRE_EQUAL( success(), stake( name("alice1111111"), name("alice1111111"), core_from_string("300000000.0000"), core_from_string("300000000.0000") ) );
 
       // create accounts {defproducera, defproducerb, ..., defproducerz} and register as producers
