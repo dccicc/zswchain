@@ -1011,7 +1011,7 @@ class Cluster(object):
         contract="zswhq.token"
         action="transfer"
         for name, keys in producerKeys.items():
-            data="{\"from\":\"eosio\",\"to\":\"%s\",\"quantity\":\"%s\",\"memo\":\"%s\"}" % (name, initialFunds, "init eosio transfer")
+            data="{\"from\":\"zswhq\",\"to\":\"%s\",\"quantity\":\"%s\",\"memo\":\"%s\"}" % (name, initialFunds, "init eosio transfer")
             opts="--permission zswhq@active"
             if name != "zswhq":
                 trans=biosNode.pushMessage(contract, action, data, opts)

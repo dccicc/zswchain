@@ -170,7 +170,7 @@ try:
        errorExit("No blocks produced by node 1")
 
     time.sleep(0.6)
-    retMap = node0.publishContract("eosio", contractDir, wasmFile, abiFile, True)
+    retMap = node0.publishContract("zswhq", contractDir, wasmFile, abiFile, True)
     Print("sucessfully set new contract with new intrinsic!!!")
 
     testSuccessful=True
