@@ -3,7 +3,6 @@ make,dpkg -s
 bzip2,dpkg -s
 automake,dpkg -s
 libbz2-dev,dpkg -s
-libssl-dev,dpkg -s
 doxygen,dpkg -s
 graphviz,dpkg -s
 libgmp3-dev,dpkg -s
