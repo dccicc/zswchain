@@ -47,7 +47,7 @@ struct shared_public_key {
             return r1._data == rhs.pubkey.get<fc::crypto::r1::public_key_shim>()._data;
          },
          [&](const fc::crypto::gm::public_key_shim& gm) {
-            return r1._data == rhs.pubkey.get<fc::crypto::gm::public_key_shim>()._data;
+            return gm._data == rhs.pubkey.get<fc::crypto::gm::public_key_shim>()._data;
          },
          [&](const shared_string& wa) {
             return wa == rhs.pubkey.get<shared_string>();
