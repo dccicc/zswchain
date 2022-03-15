@@ -7,7 +7,7 @@
 
 namespace eosio { namespace chain {
 
-using shared_public_key_data = fc::static_variant<fc::ecc::public_key_shim, fc::crypto::r1::public_key_shim, shared_string>;
+using shared_public_key_data = fc::static_variant<fc::ecc::public_key_shim, fc::crypto::r1::public_key_shim, shared_string, fc::crypto::gm::public_key_shim>;
 
 struct shared_public_key {
    shared_public_key( shared_public_key_data&& p ) :
@@ -46,6 +46,9 @@ struct shared_public_key {
          [&](const fc::crypto::r1::public_key_shim& r1) {
             return r1._data == rhs.pubkey.get<fc::crypto::r1::public_key_shim>()._data;
          },
+         [&](const fc::crypto::gm::public_key_shim& gm) {
+            return r1._data == rhs.pubkey.get<fc::crypto::gm::public_key_shim>()._data;
+         },
          [&](const shared_string& wa) {
             return wa == rhs.pubkey.get<shared_string>();
          }
@@ -62,6 +65,9 @@ struct shared_public_key {
          },
          [&](const fc::crypto::r1::public_key_shim& r1) {
             return r1._data == r._storage.get<fc::crypto::r1::public_key_shim>()._data;
+         },
+         [&](const fc::crypto::gm::public_key_shim& gm) {
+            return gm._data == r._storage.get<fc::crypto::gm::public_key_shim>()._data;
          },
          [&](const shared_string& wa) {
             fc::datastream ds(wa.data(), wa.size());
