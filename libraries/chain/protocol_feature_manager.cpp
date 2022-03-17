@@ -163,6 +163,17 @@ Enables usage of WebAuthn keys and signatures.
 */
             {}
          } )
+         (  builtin_protocol_feature_t::guomi_key, builtin_protocol_feature_spec{
+            "GUOMI_KEY",
+            fc::variant("172fec3ac0bac96240acc5df4d75acbdf61fa990ab9c8e5187c17f211b59adcf").as<digest_type>(),
+            // SHA256 hash of the raw message below within the comment delimiters (do not modify message below).
+/*
+Builtin protocol feature: GUOMI_KEY
+
+Enables usage of GuoMi keys and signatures.
+*/
+            {}
+         } )
          (  builtin_protocol_feature_t::wtmsig_block_signatures, builtin_protocol_feature_spec{
             "WTMSIG_BLOCK_SIGNATURES",
             fc::variant("ab76031cad7a457f4fd5f5fca97a3f03b8a635278e0416f77dcc91eb99a48e10").as<digest_type>(),
