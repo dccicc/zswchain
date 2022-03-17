@@ -501,7 +501,7 @@ void print_action( const fc::variant& at ) {
    auto console = at["console"].as_string();
 
    /*
-   if( code == "eosio" && func == "setcode" )
+   if( code == "zswhq" && func == "setcode" )
       args = args.substr(40)+"...";
    if( name(code) == config::system_account_name && func == "setabi" )
       args = args.substr(40)+"...";
@@ -822,7 +822,11 @@ asset to_asset( account_name code, const string& s ) {
 }
 
 inline asset to_asset( const string& s ) {
+<<<<<<< HEAD
    return to_asset( "eosio.token"_n, s );
+=======
+   return to_asset( N(zswhq.token), s );
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 }
 
 struct set_account_permission_subcommand {
@@ -1606,9 +1610,13 @@ struct bidname_info_subcommand {
       list_producers->add_option("newname", newname, localized("The bidding name"))->required();
       list_producers->callback([this] {
          auto rawResult = call(get_table_func, fc::mutable_variant_object("json", true)
+<<<<<<< HEAD
                                ("code", name(config::system_account_name).to_string())
                                ("scope", name(config::system_account_name).to_string())
                                ("table", "namebids")
+=======
+                               ("code", "zswhq")("scope", "zswhq")("table", "namebids")
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
                                ("lower_bound", name(newname).to_uint64_t())
                                ("upper_bound", name(newname).to_uint64_t() + 1)
                                // Less than ideal upper_bound usage preserved so cleos can still work with old buggy nodeos versions
@@ -3484,7 +3492,7 @@ int main( int argc, char** argv ) {
    auto setActionPermission = set_action_permission_subcommand(setAction);
 
    // Transfer subcommand
-   string con = "eosio.token";
+   string con = "zswhq.token";
    string sender;
    string recipient;
    string amount;
@@ -3938,7 +3946,11 @@ int main( int argc, char** argv ) {
          ("requested", requested_perm_var)
          ("trx", trx_var);
 
+<<<<<<< HEAD
       send_actions({chain::action{accountPermissions, "eosio.msig"_n, "propose"_n, variant_to_bin( "eosio.msig"_n, "propose"_n, args ) }}, signing_keys_opt.get_keys());
+=======
+      send_actions({chain::action{accountPermissions, N(zswhq.msig), N(propose), variant_to_bin( N(zswhq.msig), N(propose), args ) }});
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
    });
 
    //multisig propose transaction
@@ -3971,7 +3983,11 @@ int main( int argc, char** argv ) {
          ("requested", requested_perm_var)
          ("trx", trx_var);
 
+<<<<<<< HEAD
       send_actions({chain::action{accountPermissions, "eosio.msig"_n, "propose"_n, variant_to_bin( "eosio.msig"_n, "propose"_n, args ) }}, signing_keys_opt.get_keys());
+=======
+      send_actions({chain::action{accountPermissions, N(zswhq.msig), N(propose), variant_to_bin( N(zswhq.msig), N(propose), args ) }});
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
    });
 
 
@@ -3984,7 +4000,7 @@ int main( int argc, char** argv ) {
 
    review->callback([&] {
       const auto result1 = call(get_table_func, fc::mutable_variant_object("json", true)
-                                 ("code", "eosio.msig")
+                                 ("code", "zswhq.msig")
                                  ("scope", proposer)
                                  ("table", "proposal")
                                  ("table_key", "")
@@ -4020,7 +4036,7 @@ int main( int argc, char** argv ) {
 
          try {
             const auto& result2 = call(get_table_func, fc::mutable_variant_object("json", true)
-                                       ("code", "eosio.msig")
+                                       ("code", "zswhq.msig")
                                        ("scope", proposer)
                                        ("table", "approvals2")
                                        ("table_key", "")
@@ -4052,7 +4068,7 @@ int main( int argc, char** argv ) {
             }
          } else {
             const auto result3 = call(get_table_func, fc::mutable_variant_object("json", true)
-                                       ("code", "eosio.msig")
+                                       ("code", "zswhq.msig")
                                        ("scope", proposer)
                                        ("table", "approvals")
                                        ("table_key", "")
@@ -4085,8 +4101,8 @@ int main( int argc, char** argv ) {
          if( new_multisig ) {
             for( auto& a : provided_approvers ) {
                const auto result4 = call(get_table_func, fc::mutable_variant_object("json", true)
-                                          ("code", "eosio.msig")
-                                          ("scope", "eosio.msig")
+                                          ("code", "zswhq.msig")
+                                          ("scope", "zswhq.msig")
                                           ("table", "invals")
                                           ("table_key", "")
                                           ("lower_bound", a.first.to_uint64_t())
@@ -4188,7 +4204,11 @@ int main( int argc, char** argv ) {
       }
 
       auto accountPermissions = get_account_permissions(tx_permission, {name(proposer), config::active_name});
+<<<<<<< HEAD
       send_actions({chain::action{accountPermissions, "eosio.msig"_n, name(action), variant_to_bin( "eosio.msig"_n, name(action), args ) }}, signing_keys_opt.get_keys());
+=======
+      send_actions({chain::action{accountPermissions, N(zswhq.msig), name(action), variant_to_bin( N(zswhq.msig), name(action), args ) }});
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
    };
 
    // multisig approve
@@ -4218,7 +4238,11 @@ int main( int argc, char** argv ) {
          ("account", invalidator);
 
       auto accountPermissions = get_account_permissions(tx_permission, {name(invalidator), config::active_name});
+<<<<<<< HEAD
       send_actions({chain::action{accountPermissions, "eosio.msig"_n, "invalidate"_n, variant_to_bin( "eosio.msig"_n, "invalidate"_n, args ) }}, signing_keys_opt.get_keys());
+=======
+      send_actions({chain::action{accountPermissions, N(zswhq.msig), N(invalidate), variant_to_bin( N(zswhq.msig), N(invalidate), args ) }});
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
    });
 
    // multisig cancel
@@ -4245,7 +4269,11 @@ int main( int argc, char** argv ) {
          ("proposal_name", proposal_name)
          ("canceler", canceler);
 
+<<<<<<< HEAD
       send_actions({chain::action{accountPermissions, "eosio.msig"_n, "cancel"_n, variant_to_bin( "eosio.msig"_n, "cancel"_n, args ) }}, signing_keys_opt.get_keys());
+=======
+      send_actions({chain::action{accountPermissions, N(zswhq.msig), N(cancel), variant_to_bin( N(zswhq.msig), N(cancel), args ) }});
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
       }
    );
 
@@ -4274,7 +4302,11 @@ int main( int argc, char** argv ) {
          ("proposal_name", proposal_name)
          ("executer", executer);
 
+<<<<<<< HEAD
       send_actions({chain::action{accountPermissions, "eosio.msig"_n, "exec"_n, variant_to_bin( "eosio.msig"_n, "exec"_n, args ) }}, signing_keys_opt.get_keys());
+=======
+      send_actions({chain::action{accountPermissions, N(zswhq.msig), N(exec), variant_to_bin( N(zswhq.msig), N(exec), args ) }});
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
       }
    );
 
@@ -4283,7 +4315,7 @@ int main( int argc, char** argv ) {
    wrap->require_subcommand();
 
    // wrap exec
-   string wrap_con = "eosio.wrap";
+   string wrap_con = "zswhq.wrap";
    executer = "";
    string trx_to_exec;
    auto wrap_exec = wrap->add_subcommand("exec", localized("Execute a transaction while bypassing authorization checks"));

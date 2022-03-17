@@ -500,6 +500,10 @@ namespace eosio { namespace chain {
                                    3140001, "Block does not match checkpoint" )
       FC_DECLARE_DERIVED_EXCEPTION( state_history_write_exception, controller_emit_signal_exception,
                                    3140002, "State history write error" )
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
    FC_DECLARE_DERIVED_EXCEPTION( abi_exception,                           chain_exception,
                                  3015000, "ABI exception" )

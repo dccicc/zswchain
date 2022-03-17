@@ -6,7 +6,7 @@
 
 // Extacted from eosio.token contract:
 namespace eosio {
-   class [[eosio::contract("eosio.token")]] token : public eosio::contract {
+   class [[eosio::contract("zswhq.token")]] token : public eosio::contract {
    public:
       using eosio::contract::contract;
 
@@ -27,7 +27,7 @@ public:
    [[eosio::action]]
    void setowner( eosio::name owner, uint32_t delay );
 
-   [[eosio::on_notify("eosio.token::transfer")]]
+   [[eosio::on_notify("zswhq.token::transfer")]]
    void on_transfer( eosio::name        from,
                      eosio::name        to,
                      eosio::asset       quantity,

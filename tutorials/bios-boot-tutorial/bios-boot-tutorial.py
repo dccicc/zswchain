@@ -17,16 +17,16 @@ unlockTimeout = 999999999
 fastUnstakeSystem = './fast.refund/eosio.system/eosio.system.wasm'
 
 systemAccounts = [
-    'eosio.bpay',
-    'eosio.msig',
-    'eosio.names',
-    'eosio.ram',
-    'eosio.ramfee',
-    'eosio.saving',
-    'eosio.stake',
-    'eosio.token',
-    'eosio.vpay',
-    'eosio.rex',
+    'zswhq.bpay',
+    'zswhq.msig',
+    'zswhq.names',
+    'zswhq.ram',
+    'zswhq.ramfee',
+    'zswhq.saving',
+    'zswhq.stake',
+    'zswhq.token',
+    'zswhq.vpay',
+    'zswhq.rex',
 ]
 
 def jsonArg(a):
@@ -136,7 +136,7 @@ def startProducers(b, e):
 
 def createSystemAccounts():
     for a in systemAccounts:
-        run(args.cleos + 'create account eosio ' + a + ' ' + args.public_key)
+        run(args.cleos + 'create account zswhq ' + a + ' ' + args.public_key)
 
 def intToCurrency(i):
     return '%d.%04d %s' % (i // 10000, i % 10000, args.symbol)
@@ -175,10 +175,10 @@ def createStakedAccounts(b, e):
         stakeCpu = stake - stakeNet
         print('%s: total funds=%s, ram=%s, net=%s, cpu=%s, unstaked=%s' % (a['name'], intToCurrency(a['funds']), intToCurrency(ramFunds), intToCurrency(stakeNet), intToCurrency(stakeCpu), intToCurrency(unstaked)))
         assert(funds == ramFunds + stakeNet + stakeCpu + unstaked)
-        retry(args.cleos + 'system newaccount --transfer eosio %s %s --stake-net "%s" --stake-cpu "%s" --buy-ram "%s"   ' % 
+        retry(args.cleos + 'system newaccount --transfer zswhq %s %s --stake-net "%s" --stake-cpu "%s" --buy-ram "%s"   ' % 
             (a['name'], a['pub'], intToCurrency(stakeNet), intToCurrency(stakeCpu), intToCurrency(ramFunds)))
         if unstaked:
-            retry(args.cleos + 'transfer eosio %s "%s"' % (a['name'], intToCurrency(unstaked)))
+            retry(args.cleos + 'transfer zswhq %s "%s"' % (a['name'], intToCurrency(unstaked)))
 
 def regProducers(b, e):
     for i in range(b, e):
@@ -199,7 +199,7 @@ def vote(b, e):
         retry(args.cleos + 'system voteproducer prods ' + voter + ' ' + prods)
 
 def claimRewards():
-    table = getJsonOutput(args.cleos + 'get table eosio eosio producers -l 100')
+    table = getJsonOutput(args.cleos + 'get table zswhq zswhq producers -l 100')
     times = []
     for row in table['rows']:
         if row['unpaid_blocks'] and not row['last_claim_time']:
@@ -216,7 +216,7 @@ def proxyVotes(b, e):
         retry(args.cleos + 'system voteproducer proxy ' + voter + ' ' + proxy)
 
 def updateAuth(account, permission, parent, controller):
-    run(args.cleos + 'push action eosio updateauth' + jsonArg({
+    run(args.cleos + 'push action zswhq updateauth' + jsonArg({
         'account': account,
         'permission': permission,
         'parent': parent,
@@ -247,11 +247,11 @@ def msigProposeReplaceSystem(proposer, proposalName):
     requestedPermissions = []
     for i in range(firstProducer, firstProducer + numProducers):
         requestedPermissions.append({'actor': accounts[i]['name'], 'permission': 'active'})
-    trxPermissions = [{'actor': 'eosio', 'permission': 'active'}]
+    trxPermissions = [{'actor': 'zswhq', 'permission': 'active'}]
     with open(fastUnstakeSystem, mode='rb') as f:
-        setcode = {'account': 'eosio', 'vmtype': 0, 'vmversion': 0, 'code': f.read().hex()}
+        setcode = {'account': 'zswhq', 'vmtype': 0, 'vmversion': 0, 'code': f.read().hex()}
     run(args.cleos + 'multisig propose ' + proposalName + jsonArg(requestedPermissions) + 
-        jsonArg(trxPermissions) + 'eosio setcode' + jsonArg(setcode) + ' -p ' + proposer)
+        jsonArg(trxPermissions) + 'zswhq setcode' + jsonArg(setcode) + ' -p ' + proposer)
 
 def msigApproveReplaceSystem(proposer, proposalName):
     for i in range(firstProducer, firstProducer + numProducers):
@@ -263,7 +263,7 @@ def msigExecReplaceSystem(proposer, proposalName):
     retry(args.cleos + 'multisig exec ' + proposer + ' ' + proposalName + ' -p ' + proposer)
 
 def msigReplaceSystem():
-    run(args.cleos + 'push action eosio buyrambytes' + jsonArg(['eosio', accounts[0]['name'], 200000]) + '-p eosio')
+    run(args.cleos + 'push action zswhq buyrambytes' + jsonArg(['zswhq', accounts[0]['name'], 200000]) + '-p zswhq')
     sleep(1)
     msigProposeReplaceSystem(accounts[0]['name'], 'fast.unstake')
     sleep(1)
@@ -288,15 +288,20 @@ def stepStartWallet():
     startWallet()
     importKeys()
 def stepStartBoot():
+<<<<<<< HEAD
     startNode(0, {'name': 'eosio', 'pvt': args.private_key, 'pub': args.public_key})
     sleep(10.0)
+=======
+    startNode(0, {'name': 'zswhq', 'pvt': args.private_key, 'pub': args.public_key})
+    sleep(1.5)
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 def stepInstallSystemContracts():
-    run(args.cleos + 'set contract eosio.token ' + args.contracts_dir + '/eosio.token/')
-    run(args.cleos + 'set contract eosio.msig ' + args.contracts_dir + '/eosio.msig/')
+    run(args.cleos + 'set contract zswhq.token ' + args.contracts_dir + '/eosio.token/')
+    run(args.cleos + 'set contract zswhq.msig ' + args.contracts_dir + '/eosio.msig/')
 def stepCreateTokens():
-    run(args.cleos + 'push action eosio.token create \'["eosio", "10000000000.0000 %s"]\' -p eosio.token' % (args.symbol))
+    run(args.cleos + 'push action zswhq.token create \'["zswhq", "10000000000.0000 %s"]\' -p zswhq.token' % (args.symbol))
     totalAllocation = allocateFunds(0, len(accounts))
-    run(args.cleos + 'push action eosio.token issue \'["eosio", "%s", "memo"]\' -p eosio' % intToCurrency(totalAllocation))
+    run(args.cleos + 'push action zswhq.token issue \'["zswhq", "%s", "memo"]\' -p zswhq' % intToCurrency(totalAllocation))
     sleep(1)
 def stepSetSystemContract():
     # All of the protocol upgrade features introduced in v1.8 first require a special protocol 
@@ -309,11 +314,16 @@ def stepSetSystemContract():
         '-d \'{"protocol_features_to_activate": ["0ec7e080177b2c02b278d5088611686b49d739925a92d9bfcacd7fc6b74053bd"]}\'')
     sleep(3)
 
+<<<<<<< HEAD
     # install eosio.boot which supports the native actions and activate 
     # action that allows activating desired protocol features prior to 
     # deploying a system contract with more features such as eosio.bios 
     # or eosio.system
     retry(args.cleos + 'set contract eosio ' + args.contracts_dir + '/eosio.boot/')
+=======
+    # install eosio.system the older version first
+    retry(args.cleos + 'set contract zswhq ' + args.old_contracts_dir + '/eosio.system/')
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
     sleep(3)
 
     # activate remaining features
@@ -326,39 +336,54 @@ def stepSetSystemContract():
     # BLOCKCHAIN_PARAMETERS
     retry(args.cleos + 'push action eosio activate \'["5443fcf88330c586bc0e5f3dee10e7f63c76c00249c87fe4fbf7f38c082006b4"]\' -p eosio@active')
     # GET_SENDER
+<<<<<<< HEAD
     retry(args.cleos + 'push action eosio activate \'["f0af56d2c5a48d60a4a5b5c903edfb7db3a736a94ed589d0b797df33ff9d3e1d"]\' -p eosio@active')
     # FORWARD_SETCODE
     retry(args.cleos + 'push action eosio activate \'["2652f5f96006294109b3dd0bbde63693f55324af452b799ee137a81a905eed25"]\' -p eosio@active')
     # ONLY_BILL_FIRST_AUTHORIZER
     retry(args.cleos + 'push action eosio activate \'["8ba52fe7a3956c5cd3a656a3174b931d3bb2abb45578befc59f283ecd816a405"]\' -p eosio@active')
+=======
+    retry(args.cleos + 'push action zswhq activate \'["f0af56d2c5a48d60a4a5b5c903edfb7db3a736a94ed589d0b797df33ff9d3e1d"]\' -p zswhq')
+    # FORWARD_SETCODE
+    retry(args.cleos + 'push action zswhq activate \'["2652f5f96006294109b3dd0bbde63693f55324af452b799ee137a81a905eed25"]\' -p zswhq')
+    # ONLY_BILL_FIRST_AUTHORIZER
+    retry(args.cleos + 'push action zswhq activate \'["8ba52fe7a3956c5cd3a656a3174b931d3bb2abb45578befc59f283ecd816a405"]\' -p zswhq')
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
     # RESTRICT_ACTION_TO_SELF
-    retry(args.cleos + 'push action eosio activate \'["ad9e3d8f650687709fd68f4b90b41f7d825a365b02c23a636cef88ac2ac00c43"]\' -p eosio@active')
+    retry(args.cleos + 'push action zswhq activate \'["ad9e3d8f650687709fd68f4b90b41f7d825a365b02c23a636cef88ac2ac00c43"]\' -p zswhq@active')
     # DISALLOW_EMPTY_PRODUCER_SCHEDULE
-    retry(args.cleos + 'push action eosio activate \'["68dcaa34c0517d19666e6b33add67351d8c5f69e999ca1e37931bc410a297428"]\' -p eosio@active')
+    retry(args.cleos + 'push action zswhq activate \'["68dcaa34c0517d19666e6b33add67351d8c5f69e999ca1e37931bc410a297428"]\' -p zswhq@active')
      # FIX_LINKAUTH_RESTRICTION
-    retry(args.cleos + 'push action eosio activate \'["e0fb64b1085cc5538970158d05a009c24e276fb94e1a0bf6a528b48fbc4ff526"]\' -p eosio@active')
+    retry(args.cleos + 'push action zswhq activate \'["e0fb64b1085cc5538970158d05a009c24e276fb94e1a0bf6a528b48fbc4ff526"]\' -p zswhq@active')
      # REPLACE_DEFERRED
-    retry(args.cleos + 'push action eosio activate \'["ef43112c6543b88db2283a2e077278c315ae2c84719a8b25f25cc88565fbea99"]\' -p eosio@active')
+    retry(args.cleos + 'push action zswhq activate \'["ef43112c6543b88db2283a2e077278c315ae2c84719a8b25f25cc88565fbea99"]\' -p zswhq@active')
     # NO_DUPLICATE_DEFERRED_ID
-    retry(args.cleos + 'push action eosio activate \'["4a90c00d55454dc5b059055ca213579c6ea856967712a56017487886a4d4cc0f"]\' -p eosio@active')
+    retry(args.cleos + 'push action zswhq activate \'["4a90c00d55454dc5b059055ca213579c6ea856967712a56017487886a4d4cc0f"]\' -p zswhq@active')
     # ONLY_LINK_TO_EXISTING_PERMISSION
-    retry(args.cleos + 'push action eosio activate \'["1a99a59d87e06e09ec5b028a9cbb7749b4a5ad8819004365d02dc4379a8b7241"]\' -p eosio@active')
+    retry(args.cleos + 'push action zswhq activate \'["1a99a59d87e06e09ec5b028a9cbb7749b4a5ad8819004365d02dc4379a8b7241"]\' -p zswhq@active')
     # RAM_RESTRICTIONS
-    retry(args.cleos + 'push action eosio activate \'["4e7bf348da00a945489b2a681749eb56f5de00b900014e137ddae39f48f69d67"]\' -p eosio@active')
+    retry(args.cleos + 'push action zswhq activate \'["4e7bf348da00a945489b2a681749eb56f5de00b900014e137ddae39f48f69d67"]\' -p zswhq@active')
     # WEBAUTHN_KEY
-    retry(args.cleos + 'push action eosio activate \'["4fca8bd82bbd181e714e283f83e1b45d95ca5af40fb89ad3977b653c448f78c2"]\' -p eosio@active')
+    retry(args.cleos + 'push action zswhq activate \'["4fca8bd82bbd181e714e283f83e1b45d95ca5af40fb89ad3977b653c448f78c2"]\' -p zswhq@active')
     # WTMSIG_BLOCK_SIGNATURES
-    retry(args.cleos + 'push action eosio activate \'["299dcb6af692324b899b39f16d5a530a33062804e41f09dc97e9f156b4476707"]\' -p eosio@active')
+    retry(args.cleos + 'push action zswhq activate \'["299dcb6af692324b899b39f16d5a530a33062804e41f09dc97e9f156b4476707"]\' -p zswhq@active')
     sleep(1)
 
+<<<<<<< HEAD
     # install eosio.system latest version
     retry(args.cleos + 'set contract eosio ' + args.contracts_dir + '/eosio.system/')
     # setpriv is only available after eosio.system is installed
     run(args.cleos + 'push action eosio setpriv' + jsonArg(['eosio.msig', 1]) + '-p eosio@active')
+=======
+    run(args.cleos + 'push action zswhq setpriv' + jsonArg(['zswhq.msig', 1]) + '-p zswhq@active')
+
+    # install eosio.system latest version
+    retry(args.cleos + 'set contract zswhq ' + args.contracts_dir + '/eosio.system/')
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
     sleep(3)
 
 def stepInitSystemContract():
-    run(args.cleos + 'push action eosio init' + jsonArg(['0', '4,' + args.symbol]) + '-p eosio@active')
+    run(args.cleos + 'push action zswhq init' + jsonArg(['0', '4,' + args.symbol]) + '-p zswhq@active')
     sleep(1)
 def stepCreateStakedAccounts():
     createStakedAccounts(0, len(accounts))
@@ -377,9 +402,9 @@ def stepVote():
 def stepProxyVotes():
     proxyVotes(0, 0 + args.num_voters)
 def stepResign():
-    resign('eosio', 'eosio.prods')
+    resign('zswhq', 'zswhq.prods')
     for a in systemAccounts:
-        resign(a, 'eosio')
+        resign(a, 'zswhq')
 def stepTransfer():
     while True:
         randomTransfer(0, args.num_senders)
@@ -394,7 +419,7 @@ commands = [
     ('k', 'kill',               stepKillAll,                True,    "Kill all nodeos and keosd processes"),
     ('w', 'wallet',             stepStartWallet,            True,    "Start keosd, create wallet, fill with keys"),
     ('b', 'boot',               stepStartBoot,              True,    "Start boot node"),
-    ('s', 'sys',                createSystemAccounts,       True,    "Create system accounts (eosio.*)"),
+    ('s', 'sys',                createSystemAccounts,       True,    "Create system accounts (zswhq.*)"),
     ('c', 'contracts',          stepInstallSystemContracts, True,    "Install system contracts (token, msig)"),
     ('t', 'tokens',             stepCreateTokens,           True,    "Create tokens"),
     ('S', 'sys-contract',       stepSetSystemContract,      True,    "Set system contract"),
@@ -405,14 +430,14 @@ commands = [
     ('v', 'vote',               stepVote,                   True,    "Vote for producers"),
     ('R', 'claim',              claimRewards,               True,    "Claim rewards"),
     ('x', 'proxy',              stepProxyVotes,             True,    "Proxy votes"),
-    ('q', 'resign',             stepResign,                 True,    "Resign eosio"),
+    ('q', 'resign',             stepResign,                 True,    "Resign zswhq"),
     ('m', 'msg-replace',        msigReplaceSystem,          False,   "Replace system contract using msig"),
     ('X', 'xfer',               stepTransfer,               False,   "Random transfer tokens (infinite loop)"),
     ('l', 'log',                stepLog,                    True,    "Show tail of node's log"),
 ]
 
-parser.add_argument('--public-key', metavar='', help="EOSIO Public Key", default='EOS8Znrtgwt8TfpmbVpTKvA2oB8Nqey625CLN8bCN3TEbgx86Dsvr', dest="public_key")
-parser.add_argument('--private-Key', metavar='', help="EOSIO Private Key", default='5K463ynhZoCDDa4RDcr63cUwWLTnKqmdcoTKTHBjqoKfv4u5V7p', dest="private_key")
+parser.add_argument('--public-key', metavar='', help="中数文 Public Key", default='EOS8Znrtgwt8TfpmbVpTKvA2oB8Nqey625CLN8bCN3TEbgx86Dsvr', dest="public_key")
+parser.add_argument('--private-Key', metavar='', help="中数文 Private Key", default='5K463ynhZoCDDa4RDcr63cUwWLTnKqmdcoTKTHBjqoKfv4u5V7p', dest="private_key")
 parser.add_argument('--cleos', metavar='', help="Cleos command", default='../../build/programs/cleos/cleos --wallet-url http://127.0.0.1:6666 ')
 parser.add_argument('--nodeos', metavar='', help="Path to nodeos binary", default='../../build/programs/nodeos/nodeos')
 parser.add_argument('--keosd', metavar='', help="Path to keosd binary", default='../../build/programs/keosd/keosd')

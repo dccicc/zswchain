@@ -42,9 +42,14 @@ controller::config copy_config(const controller::config& config, int ordinal) {
 
 controller::config copy_config_and_files(const controller::config& config, int ordinal) {
    controller::config copied_config = copy_config(config, ordinal);
+<<<<<<< HEAD
    fc::create_directories(copied_config.blog.log_dir);
    fc::copy(config.blog.log_dir / "blocks.log", copied_config.blog.log_dir / "blocks.log");
    fc::copy(config.blog.log_dir / config::reversible_blocks_dir_name, copied_config.blog.log_dir / config::reversible_blocks_dir_name );
+=======
+   fc::create_directories(copied_config.blocks_dir);
+   fc::copy(config.blocks_dir / "blocks.log", copied_config.blocks_dir / "blocks.log");
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
    return copied_config;
 }
 

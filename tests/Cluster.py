@@ -109,7 +109,7 @@ class Cluster(object):
         self.defProducerAccounts={}
         self.defproduceraAccount=self.defProducerAccounts["defproducera"]= Account("defproducera")
         self.defproducerbAccount=self.defProducerAccounts["defproducerb"]= Account("defproducerb")
-        self.eosioAccount=self.defProducerAccounts["eosio"]= Account("eosio")
+        self.eosioAccount=self.defProducerAccounts["zswhq"]= Account("zswhq")
 
         self.defproduceraAccount.ownerPrivateKey=defproduceraPrvtKey
         self.defproduceraAccount.activePrivateKey=defproduceraPrvtKey
@@ -508,7 +508,7 @@ class Cluster(object):
             initAccountKeys(account, producerKeys[name])
             self.defProducerAccounts[name] = account
 
-        self.eosioAccount=self.defProducerAccounts["eosio"]
+        self.eosioAccount=self.defProducerAccounts["zswhq"]
         self.defproduceraAccount=self.defProducerAccounts["defproducera"]
         self.defproducerbAccount=self.defProducerAccounts["defproducerb"]
 
@@ -1042,7 +1042,7 @@ class Cluster(object):
             Utils.Print("ERROR: Failed to create ignition wallet.")
             return None
 
-        eosioName="eosio"
+        eosioName="zswhq"
         eosioKeys=producerKeys[eosioName]
         eosioAccount=Account(eosioName)
         eosioAccount.ownerPrivateKey=eosioKeys["private"]
@@ -1058,12 +1058,12 @@ class Cluster(object):
         initialFunds="1000000.0000 {0}".format(CORE_SYMBOL)
         Utils.Print("Transfer initial fund %s to individual accounts." % (initialFunds))
         trans=None
-        contract="eosio.token"
+        contract="zswhq.token"
         action="transfer"
         for name, keys in producerKeys.items():
-            data="{\"from\":\"eosio\",\"to\":\"%s\",\"quantity\":\"%s\",\"memo\":\"%s\"}" % (name, initialFunds, "init eosio transfer")
-            opts="--permission eosio@active"
-            if name != "eosio":
+            data="{\"from\":\"zswhq\",\"to\":\"%s\",\"quantity\":\"%s\",\"memo\":\"%s\"}" % (name, initialFunds, "init eosio transfer")
+            opts="--permission zswhq@active"
+            if name != "zswhq":
                 trans=biosNode.pushMessage(contract, action, data, opts)
                 if trans is None or not trans[0]:
                     Utils.Print("ERROR: Failed to transfer funds from eosio.token to %s." % (name))
@@ -1108,7 +1108,7 @@ class Cluster(object):
 
         ignWallet=self.walletMgr.create("ignition")
 
-        eosioName="eosio"
+        eosioName="zswhq"
         eosioKeys=producerKeys[eosioName]
         eosioAccount=Account(eosioName)
         eosioAccount.ownerPrivateKey=eosioKeys["private"]
@@ -1120,7 +1120,7 @@ class Cluster(object):
             Utils.Print("ERROR: Failed to import %s account keys into ignition wallet." % (eosioName))
             return None
 
-        contract="eosio.bios"
+        contract="zswhq.bios"
         contractDir="unittests/contracts/%s" % (contract)
         if PFSetupPolicy.hasPreactivateFeature(pfSetupPolicy):
             contractDir="unittests/contracts/old_versions/v1.7.0-develop-preactivate_feature/%s" % (contract)
@@ -1185,8 +1185,8 @@ class Cluster(object):
                     setProdsStr=f.read()
 
                     Utils.Print("Setting producers.")
-                    opts="--permission eosio@active"
-                    myTrans=biosNode.pushMessage("eosio", "setprods", setProdsStr, opts)
+                    opts="--permission zswhq@active"
+                    myTrans=biosNode.pushMessage("zswhq", "setprods", setProdsStr, opts)
                     if myTrans is None or not myTrans[0]:
                         Utils.Print("ERROR: Failed to set producers.")
                         return None
@@ -1210,9 +1210,9 @@ class Cluster(object):
                 setProdsStr += ' ] }'
                 if Utils.Debug: Utils.Print("setprods: %s" % (setProdsStr))
                 Utils.Print("Setting producers: %s." % (", ".join(prodNames)))
-                opts="--permission eosio@active"
+                opts="--permission zswhq@active"
                 # pylint: disable=redefined-variable-type
-                trans=biosNode.pushMessage("eosio", "setprods", setProdsStr, opts)
+                trans=biosNode.pushMessage("zswhq", "setprods", setProdsStr, opts)
                 if trans is None or not trans[0]:
                     Utils.Print("ERROR: Failed to set producer %s." % (keys["name"]))
                     return None
@@ -1224,8 +1224,13 @@ class Cluster(object):
                 return None
 
             # wait for block production handover (essentially a block produced by anyone but eosio).
+<<<<<<< HEAD
             lam = lambda: biosNode.getInfo(exitOnError=True)["head_block_producer"] != "eosio"
             ret=Utils.waitForTruth(lam)
+=======
+            lam = lambda: biosNode.getInfo(exitOnError=True)["head_block_producer"] != "zswhq"
+            ret=Utils.waitForBool(lam)
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
             if not ret:
                 Utils.Print("ERROR: Block production handover failed.")
                 return None
@@ -1233,28 +1238,28 @@ class Cluster(object):
         if onlySetProds: return biosNode
 
         eosioTokenAccount=copy.deepcopy(eosioAccount)
-        eosioTokenAccount.name="eosio.token"
+        eosioTokenAccount.name="zswhq.token"
         trans=biosNode.createAccount(eosioTokenAccount, eosioAccount, 0)
         if trans is None:
             Utils.Print("ERROR: Failed to create account %s" % (eosioTokenAccount.name))
             return None
 
         eosioRamAccount=copy.deepcopy(eosioAccount)
-        eosioRamAccount.name="eosio.ram"
+        eosioRamAccount.name="zswhq.ram"
         trans=biosNode.createAccount(eosioRamAccount, eosioAccount, 0)
         if trans is None:
             Utils.Print("ERROR: Failed to create account %s" % (eosioRamAccount.name))
             return None
 
         eosioRamfeeAccount=copy.deepcopy(eosioAccount)
-        eosioRamfeeAccount.name="eosio.ramfee"
+        eosioRamfeeAccount.name="zswhq.ramfee"
         trans=biosNode.createAccount(eosioRamfeeAccount, eosioAccount, 0)
         if trans is None:
             Utils.Print("ERROR: Failed to create account %s" % (eosioRamfeeAccount.name))
             return None
 
         eosioStakeAccount=copy.deepcopy(eosioAccount)
-        eosioStakeAccount.name="eosio.stake"
+        eosioStakeAccount.name="zswhq.stake"
         trans=biosNode.createAccount(eosioStakeAccount, eosioAccount, 0)
         if trans is None:
             Utils.Print("ERROR: Failed to create account %s" % (eosioStakeAccount.name))
@@ -1266,7 +1271,7 @@ class Cluster(object):
             Utils.Print("ERROR: Failed to validate transaction %s got rolled into a block on server port %d." % (transId, biosNode.port))
             return None
 
-        contract="eosio.token"
+        contract="zswhq.token"
         contractDir="unittests/contracts/%s" % (contract)
         wasmFile="%s.wasm" % (contract)
         abiFile="%s.abi" % (contract)
@@ -1322,7 +1327,7 @@ class Cluster(object):
             return None
 
         if loadSystemContract:
-            contract="eosio.system"
+            contract="zswhq.system"
             contractDir="unittests/contracts/%s" % (contract)
             wasmFile="%s.wasm" % (contract)
             abiFile="%s.abi" % (contract)

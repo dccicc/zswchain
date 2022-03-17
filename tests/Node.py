@@ -722,7 +722,7 @@ class Node(object):
     def getAccountEosBalanceStr(self, scope):
         """Returns SYS currency0000 account balance from cleos get table command. Returned balance is string following syntax "98.0311 SYS". """
         assert isinstance(scope, str)
-        amount=self.getTableAccountBalance("eosio.token", scope)
+        amount=self.getTableAccountBalance("zswhq.token", scope)
         if Utils.Debug: Utils.Print("getNodeAccountEosBalance %s %s" % (scope, amount))
         assert isinstance(amount, str)
         return amount
@@ -1453,8 +1453,8 @@ class Node(object):
         for digest in featureDigests:
             Utils.Print("push activate action with digest {}".format(digest))
             data="{{\"feature_digest\":{}}}".format(digest)
-            opts="--permission eosio@active"
-            trans=self.pushMessage("eosio", "activate", data, opts)
+            opts="--permission zswhq@active"
+            trans=self.pushMessage("zswhq", "activate", data, opts)
             if trans is None or not trans[0]:
                 Utils.Print("ERROR: Failed to preactive digest {}".format(digest))
                 return None

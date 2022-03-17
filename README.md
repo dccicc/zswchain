@@ -1,6 +1,7 @@
 
-# EOSIO - The Most Powerful Infrastructure for Decentralized Applications
+# 中数文联盟链
 
+<<<<<<< HEAD
 [![Build status](https://badge.buildkite.com/370fe5c79410f7d695e4e34c500b4e86e3ac021c6b1f739e20.svg?branch=master)](https://buildkite.com/EOSIO/eosio)
 
 Welcome to the EOSIO source code repository! This software enables businesses to rapidly build and deploy high-performance and high-security blockchain-based applications.
@@ -166,3 +167,5 @@ EOSIO is released under the open source [MIT](./LICENSE) license and is offered 
 See [LICENSE](./LICENSE) for copyright and license terms.
 
 All repositories and other materials are provided subject to the terms of this [IMPORTANT](./IMPORTANT.md) notice and you must familiarize yourself with its terms.  The notice contains important information, limitations and restrictions relating to our software, publications, trademarks, third-party resources, and forward-looking statements.  By accessing any of our repositories and other materials, you accept and agree to the terms of the notice.
+=======
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7

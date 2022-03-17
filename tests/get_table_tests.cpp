@@ -34,7 +34,11 @@ using backing_store_ts = boost::mpl::list<TESTER, ROCKSDB_TESTER>;
 
 transaction_trace_ptr
 issue_tokens( TESTER& t, account_name issuer, account_name to, const asset& amount,
+<<<<<<< HEAD
               std::string memo = "", account_name token_contract = "eosio.token"_n )
+=======
+              std::string memo = "", account_name token_contract = N(zswhq.token) )
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 {
    signed_transaction trx;
 
@@ -64,22 +68,37 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( get_scope_test, TESTER_T, backing_store_ts) { try
    TESTER_T t;
    t.produce_blocks(2);
 
+<<<<<<< HEAD
    t.create_accounts({ "eosio.token"_n, "eosio.ram"_n, "eosio.ramfee"_n, "eosio.stake"_n,
       "eosio.bpay"_n, "eosio.vpay"_n, "eosio.saving"_n, "eosio.names"_n });
+=======
+   create_accounts({ N(zswhq.token), N(zswhq.ram), N(zswhq.ramfee), N(zswhq.stake),
+      N(zswhq.bpay), N(zswhq.vpay), N(zswhq.saving), N(zswhq.names) });
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
    std::vector<account_name> accs{"inita"_n, "initb"_n, "initc"_n, "initd"_n};
    t.create_accounts(accs);
    t.produce_block();
 
+<<<<<<< HEAD
    t.set_code( "eosio.token"_n, contracts::eosio_token_wasm() );
    t.set_abi( "eosio.token"_n, contracts::eosio_token_abi().data() );
    t.produce_blocks(1);
+=======
+   set_code( N(zswhq.token), contracts::eosio_token_wasm() );
+   set_abi( N(zswhq.token), contracts::eosio_token_abi().data() );
+   produce_blocks(1);
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
    // create currency
    auto act = mutable_variant_object()
-         ("issuer",       "eosio")
+         ("issuer",       "zswhq")
          ("maximum_supply", eosio::chain::asset::from_string("1000000000.0000 SYS"));
+<<<<<<< HEAD
    t.push_action("eosio.token"_n, "create"_n, "eosio.token"_n, act );
+=======
+   push_action(N(zswhq.token), N(create), N(zswhq.token), act );
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
    // issue
    for (account_name a: accs) {
@@ -88,17 +107,29 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( get_scope_test, TESTER_T, backing_store_ts) { try
    t.produce_blocks(1);
 
    // iterate over scope
+<<<<<<< HEAD
    eosio::chain_apis::read_only plugin(*(t.control), {}, fc::microseconds::maximum());
    eosio::chain_apis::read_only::get_table_by_scope_params param{"eosio.token"_n, "accounts"_n, "inita", "", 10};
+=======
+   eosio::chain_apis::read_only plugin(*(this->control), {}, fc::microseconds::maximum(), {});
+   eosio::chain_apis::read_only::get_table_by_scope_params param{N(zswhq.token), N(accounts), "inita", "", 10};
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
    eosio::chain_apis::read_only::get_table_by_scope_result result = plugin.read_only::get_table_by_scope(param);
 
    BOOST_REQUIRE_EQUAL(4u, result.rows.size());
    BOOST_REQUIRE_EQUAL("", result.more);
    if (result.rows.size() >= 4) {
+<<<<<<< HEAD
       BOOST_REQUIRE_EQUAL(name("eosio.token"_n), result.rows[0].code);
       BOOST_REQUIRE_EQUAL(name("inita"_n), result.rows[0].scope);
       BOOST_REQUIRE_EQUAL(name("accounts"_n), result.rows[0].table);
       BOOST_REQUIRE_EQUAL(name("eosio"_n), result.rows[0].payer);
+=======
+      BOOST_REQUIRE_EQUAL(name(N(zswhq.token)), result.rows[0].code);
+      BOOST_REQUIRE_EQUAL(name(N(inita)), result.rows[0].scope);
+      BOOST_REQUIRE_EQUAL(name(N(accounts)), result.rows[0].table);
+      BOOST_REQUIRE_EQUAL(name(N(zswhq)), result.rows[0].payer);
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
       BOOST_REQUIRE_EQUAL(1u, result.rows[0].count);
 
       BOOST_REQUIRE_EQUAL(name("initb"_n), result.rows[1].scope);
@@ -153,22 +184,37 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( get_table_test, TESTER_T, backing_store_ts) { try
    TESTER_T t;
    t.produce_blocks(2);
 
+<<<<<<< HEAD
    t.create_accounts({ "eosio.token"_n, "eosio.ram"_n, "eosio.ramfee"_n, "eosio.stake"_n,
       "eosio.bpay"_n, "eosio.vpay"_n, "eosio.saving"_n, "eosio.names"_n });
+=======
+   create_accounts({ N(zswhq.token), N(zswhq.ram), N(zswhq.ramfee), N(zswhq.stake),
+      N(zswhq.bpay), N(zswhq.vpay), N(zswhq.saving), N(zswhq.names) });
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
    std::vector<account_name> accs{"inita"_n, "initb"_n};
    t.create_accounts(accs);
    t.produce_block();
 
+<<<<<<< HEAD
    t.set_code( "eosio.token"_n, contracts::eosio_token_wasm() );
    t.set_abi( "eosio.token"_n, contracts::eosio_token_abi().data() );
    t.produce_blocks(1);
+=======
+   set_code( N(zswhq.token), contracts::eosio_token_wasm() );
+   set_abi( N(zswhq.token), contracts::eosio_token_abi().data() );
+   produce_blocks(1);
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
    // create currency
    auto act = mutable_variant_object()
-         ("issuer",       "eosio")
+         ("issuer",       "zswhq")
          ("maximum_supply", eosio::chain::asset::from_string("1000000000.0000 SYS"));
+<<<<<<< HEAD
    t.push_action("eosio.token"_n, "create"_n, "eosio.token"_n, act );
+=======
+   push_action(N(zswhq.token), N(create), N(zswhq.token), act );
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
    // issue
    for (account_name a: accs) {
@@ -178,9 +224,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( get_table_test, TESTER_T, backing_store_ts) { try
 
    // create currency 2
    act = mutable_variant_object()
-         ("issuer",       "eosio")
+         ("issuer",       "zswhq")
          ("maximum_supply", eosio::chain::asset::from_string("1000000000.0000 AAA"));
+<<<<<<< HEAD
    t.push_action("eosio.token"_n, "create"_n, "eosio.token"_n, act );
+=======
+   push_action(N(zswhq.token), N(create), N(zswhq.token), act );
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
    // issue
    for (account_name a: accs) {
       issue_tokens( t, config::system_account_name, a, eosio::chain::asset::from_string("9999.0000 AAA") );
@@ -189,9 +239,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( get_table_test, TESTER_T, backing_store_ts) { try
 
    // create currency 3
    act = mutable_variant_object()
-         ("issuer",       "eosio")
+         ("issuer",       "zswhq")
          ("maximum_supply", eosio::chain::asset::from_string("1000000000.0000 CCC"));
+<<<<<<< HEAD
    t.push_action("eosio.token"_n, "create"_n, "eosio.token"_n, act );
+=======
+   push_action(N(zswhq.token), N(create), N(zswhq.token), act );
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
    // issue
    for (account_name a: accs) {
       issue_tokens( t, config::system_account_name, a, eosio::chain::asset::from_string("7777.0000 CCC") );
@@ -200,9 +254,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( get_table_test, TESTER_T, backing_store_ts) { try
 
    // create currency 3
    act = mutable_variant_object()
-         ("issuer",       "eosio")
+         ("issuer",       "zswhq")
          ("maximum_supply", eosio::chain::asset::from_string("1000000000.0000 BBB"));
+<<<<<<< HEAD
    t.push_action("eosio.token"_n, "create"_n, "eosio.token"_n, act );
+=======
+   push_action(N(zswhq.token), N(create), N(zswhq.token), act );
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
    // issue
    for (account_name a: accs) {
       issue_tokens( t, config::system_account_name, a, eosio::chain::asset::from_string("8888.0000 BBB") );
@@ -212,7 +270,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( get_table_test, TESTER_T, backing_store_ts) { try
    // get table: normal case
    eosio::chain_apis::read_only plugin(*(t.control), {}, fc::microseconds::maximum());
    eosio::chain_apis::read_only::get_table_rows_params p;
+<<<<<<< HEAD
    p.code = "eosio.token"_n;
+=======
+   p.code = N(zswhq.token);
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
    p.scope = "inita";
    p.table = "accounts"_n;
    p.json = true;
@@ -250,10 +312,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( get_table_test, TESTER_T, backing_store_ts) { try
       BOOST_REQUIRE_EQUAL("8888.0000 BBB", result.rows[2]["data"]["balance"].as_string());
       BOOST_REQUIRE_EQUAL("7777.0000 CCC", result.rows[1]["data"]["balance"].as_string());
       BOOST_REQUIRE_EQUAL("10000.0000 SYS", result.rows[0]["data"]["balance"].as_string());
-      BOOST_REQUIRE_EQUAL("eosio", result.rows[0]["payer"].as_string());
-      BOOST_REQUIRE_EQUAL("eosio", result.rows[1]["payer"].as_string());
-      BOOST_REQUIRE_EQUAL("eosio", result.rows[2]["payer"].as_string());
-      BOOST_REQUIRE_EQUAL("eosio", result.rows[3]["payer"].as_string());
+      BOOST_REQUIRE_EQUAL("zswhq", result.rows[0]["payer"].as_string());
+      BOOST_REQUIRE_EQUAL("zswhq", result.rows[1]["payer"].as_string());
+      BOOST_REQUIRE_EQUAL("zswhq", result.rows[2]["payer"].as_string());
+      BOOST_REQUIRE_EQUAL("zswhq", result.rows[3]["payer"].as_string());
    }
    p.show_payer = false;
 
@@ -333,22 +395,37 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( get_table_by_seckey_test, TESTER_T, backing_store
    TESTER_T t;
    t.produce_blocks(2);
 
+<<<<<<< HEAD
    t.create_accounts({ "eosio.token"_n, "eosio.ram"_n, "eosio.ramfee"_n, "eosio.stake"_n,
       "eosio.bpay"_n, "eosio.vpay"_n, "eosio.saving"_n, "eosio.names"_n });
+=======
+   create_accounts({ N(zswhq.token), N(zswhq.ram), N(zswhq.ramfee), N(zswhq.stake),
+      N(zswhq.bpay), N(zswhq.vpay), N(zswhq.saving), N(zswhq.names) });
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
    std::vector<account_name> accs{"inita"_n, "initb"_n, "initc"_n, "initd"_n};
    t.create_accounts(accs);
    t.produce_block();
 
+<<<<<<< HEAD
    t.set_code( "eosio.token"_n, contracts::eosio_token_wasm() );
    t.set_abi( "eosio.token"_n, contracts::eosio_token_abi().data() );
    t.produce_blocks(1);
+=======
+   set_code( N(zswhq.token), contracts::eosio_token_wasm() );
+   set_abi( N(zswhq.token), contracts::eosio_token_abi().data() );
+   produce_blocks(1);
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
    // create currency
    auto act = mutable_variant_object()
-         ("issuer",       "eosio")
+         ("issuer",       "zswhq")
          ("maximum_supply", eosio::chain::asset::from_string("1000000000.0000 SYS"));
+<<<<<<< HEAD
    t.push_action("eosio.token"_n, "create"_n, "eosio.token"_n, act );
+=======
+   push_action(N(zswhq.token), N(create), N(zswhq.token), act );
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
    // issue
    for (account_name a: accs) {
@@ -365,12 +442,21 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( get_table_by_seckey_test, TESTER_T, backing_store
                  ("core", "4,SYS"));
 
    // bidname
+<<<<<<< HEAD
    auto bidname = [&t]( const account_name& bidder, const account_name& newname, const asset& bid ) {
       return t.push_action( "eosio"_n, "bidname"_n, bidder, fc::mutable_variant_object()
                            ("bidder",  bidder)
                            ("newname", newname)
                            ("bid", bid)
                             );
+=======
+   auto bidname = [this]( const account_name& bidder, const account_name& newname, const asset& bid ) {
+      return push_action( N(zswhq), N(bidname), bidder, fc::mutable_variant_object()
+                          ("bidder",  bidder)
+                          ("newname", newname)
+                          ("bid", bid)
+                          );
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
    };
 
    bidname("inita"_n, "com"_n, eosio::chain::asset::from_string("10.0000 SYS"));
@@ -382,9 +468,15 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( get_table_by_seckey_test, TESTER_T, backing_store
    // get table: normal case
    eosio::chain_apis::read_only plugin(*(t.control), {}, fc::microseconds::maximum());
    eosio::chain_apis::read_only::get_table_rows_params p;
+<<<<<<< HEAD
    p.code = "eosio"_n;
    p.scope = "eosio";
    p.table = "namebids"_n;
+=======
+   p.code = N(zswhq);
+   p.scope = "zswhq";
+   p.table = N(namebids);
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
    p.json = true;
    p.index_position = "secondary"; // ordered by high_bid
    p.key_type = "i64";

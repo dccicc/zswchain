@@ -66,21 +66,21 @@ try:
     irrNode = cluster.getNode(irrNodeId)
 
     # Create delayed transaction to create "generated_transaction_object"
-    cmd = "create account -j eosio sample EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV\
-         EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV --delay-sec 600 -p eosio"
+    cmd = "create account -j zswhq sample PUB_K1_5mk8TsUDDszMJPte932L3n5P2hBbBhDfeyDV6feMaYWvPE1hYk\
+         PUB_K1_5mk8TsUDDszMJPte932L3n5P2hBbBhDfeyDV6feMaYWvPE1hYk --delay-sec 600 -p zswhq"
     trans = producerNode.processCleosCmd(cmd, cmd, silentErrors=False)
     assert trans
 
     # Schedule a new producer to trigger new producer schedule for "global_property_object"
     newProducerAcc = Account("newprod")
-    newProducerAcc.ownerPublicKey = "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
-    newProducerAcc.activePublicKey = "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
+    newProducerAcc.ownerPublicKey = "PUB_K1_5mk8TsUDDszMJPte932L3n5P2hBbBhDfeyDV6feMaYWvPE1hYk"
+    newProducerAcc.activePublicKey = "PUB_K1_5mk8TsUDDszMJPte932L3n5P2hBbBhDfeyDV6feMaYWvPE1hYk"
     producerNode.createAccount(newProducerAcc, cluster.eosioAccount)
 
     setProdsStr = '{"schedule": ['
     setProdsStr += '{"producer_name":' + newProducerAcc.name + ',"block_signing_key":' + newProducerAcc.activePublicKey + '}'
     setProdsStr += ']}'
-    cmd="push action -j eosio setprods '{}' -p eosio".format(setProdsStr)
+    cmd="push action -j zswhq setprods '{}' -p zswhq".format(setProdsStr)
     trans = producerNode.processCleosCmd(cmd, cmd, silentErrors=False)
     assert trans
     setProdsBlockNum = int(trans["processed"]["block_num"])

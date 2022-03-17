@@ -32,7 +32,9 @@ export SSUBPREFIX
 hash=`openssl dgst -sha256 ${NAME}.tar.gz | awk 'NF>1{print $NF}'`
 
 echo "class Eosio < Formula
-
+   # typed: false
+   # frozen_string_literal: true
+   
    homepage \"${URL}\"
    revision 0
    url \"https://github.com/eosio/eos/archive/v${VERSION}.tar.gz\"
@@ -43,13 +45,18 @@ echo "class Eosio < Formula
    depends_on \"gmp\"
    depends_on \"openssl@1.1\"
    depends_on \"libusb\"
+<<<<<<< HEAD
    depends_on \"libpqxx\"
    depends_on :macos => :mojave
    depends_on :arch =>  :intel
+=======
+   depends_on macos: :mojave
+   depends_on arch: :intel
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
    bottle do
       root_url \"https://github.com/eosio/eos/releases/download/v${VERSION}\"
-      sha256 \"${hash}\" => :${MAC_VERSION}
+      sha256 ${MAC_VERSION}: \"${hash}\"
    end
    def install
       raise \"Error, only supporting binary packages at this time\"

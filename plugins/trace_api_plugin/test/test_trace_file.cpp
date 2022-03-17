@@ -101,19 +101,19 @@ namespace {
                   {
                      {
                         0,
-                        "eosio.token"_n, "eosio.token"_n, "transfer"_n,
+                        "zswhq.token"_n, "zswhq.token"_n, "transfer"_n,
                         {{ "alice"_n, "active"_n }},
                         make_transfer_data( "alice"_n, "bob"_n, "0.0001 SYS"_t, "Memo!" )
                      },
                      {
                         1,
-                        "alice"_n, "eosio.token"_n, "transfer"_n,
+                        "alice"_n, "zswhq.token"_n, "transfer"_n,
                         {{ "alice"_n, "active"_n }},
                         make_transfer_data( "alice"_n, "bob"_n, "0.0001 SYS"_t, "Memo!" )
                      },
                      {
                         2,
-                        "bob"_n, "eosio.token"_n, "transfer"_n,
+                        "bob"_n, "zswhq.token"_n, "transfer"_n,
                         {{ "alice"_n, "active"_n }},
                         make_transfer_data( "alice"_n, "bob"_n, "0.0001 SYS"_t, "Memo!" )
                      }
@@ -166,19 +166,19 @@ namespace {
                {
                   {
                      0,
-                     "eosio.token"_n, "eosio.token"_n, "transfer"_n,
+                     "zswhq.token"_n, "zswhq.token"_n, "transfer"_n,
                      {{ "alice"_n, "active"_n }},
                      make_transfer_data( "alice"_n, "bob"_n, "0.0001 SYS"_t, "Memo!" )
                   },
                   {
                      1,
-                     "alice"_n, "eosio.token"_n, "transfer"_n,
+                     "alice"_n, "zswhq.token"_n, "transfer"_n,
                      {{ "alice"_n, "active"_n }},
                      make_transfer_data( "alice"_n, "bob"_n, "0.0001 SYS"_t, "Memo!" )
                   },
                   {
                      2,
-                     "bob"_n, "eosio.token"_n, "transfer"_n,
+                     "bob"_n, "zswhq.token"_n, "transfer"_n,
                      {{ "alice"_n, "active"_n }},
                      make_transfer_data( "alice"_n, "bob"_n, "0.0001 SYS"_t, "Memo!" )
                   }

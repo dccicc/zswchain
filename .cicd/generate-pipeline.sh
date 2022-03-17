@@ -4,6 +4,7 @@ set -eo pipefail
 . ./.cicd/helpers/general.sh
 export PLATFORMS_JSON_ARRAY='[]'
 [[ -z "$ROUNDS" ]] && export ROUNDS='1'
+<<<<<<< HEAD
 BUILDKITE_BUILD_AGENT_QUEUE='automation-eks-eos-builder-fleet'
 BUILDKITE_TEST_AGENT_QUEUE='automation-eks-eos-tester-fleet'
 # attach pipeline documentation
@@ -12,6 +13,37 @@ export RETRY="$(buildkite-agent meta-data get pipeline-upload-retries --default 
 if [[ "$BUILDKITE" == 'true' && "$RETRY" == '0' ]]; then
     echo "This documentation is also available on [GitHub]($DOCS_URL)." | buildkite-agent annotate --append --style 'info' --context 'documentation'
     cat .cicd/README.md | buildkite-agent annotate --append --style 'info' --context 'documentation'
+=======
+[[ -z "$ROUND_SIZE" ]] && export ROUND_SIZE='1'
+BUILDKITE_BUILD_AGENT_QUEUE='automation-eks-eos-builder-fleet'
+BUILDKITE_TEST_AGENT_QUEUE='automation-eks-eos-tester-fleet'
+# attach pipeline documentation
+export DOCS_URL="https://github.com/EOSIO/eos/blob/$(git rev-parse HEAD)/.cicd"
+export RETRY="$([[ "$BUILDKITE" == 'true' ]] && buildkite-agent meta-data get pipeline-upload-retries --default '0' || echo "${RETRY:-0}")"
+if [[ "$BUILDKITE" == 'true' && "$RETRY" == '0' ]]; then
+    echo "This documentation is also available on [GitHub]($DOCS_URL/README.md)." | buildkite-agent annotate --append --style 'info' --context 'documentation'
+    cat .cicd/README.md | buildkite-agent annotate --append --style 'info' --context 'documentation'
+    if [[ "$BUILDKITE_PIPELINE_SLUG" == 'eosio-test-stability' ]]; then
+        echo "This documentation is also available on [GitHub]($DOCS_URL/eosio-test-stability.md)." | buildkite-agent annotate --append --style 'info' --context 'test-stability'
+        cat .cicd/eosio-test-stability.md | buildkite-agent annotate --append --style 'info' --context 'test-stability'
+    fi
+fi
+[[ "$BUILDKITE" == 'true' ]] && buildkite-agent meta-data set pipeline-upload-retries "$(( $RETRY + 1 ))"
+# guard against accidentally spawning too many jobs
+if (( $ROUNDS > 1 || $ROUND_SIZE > 1 )) && [[ -z "$TEST" ]]; then
+    echo '+++ :no_entry: WARNING: Your parameters will spawn a very large number of jobs!' 1>&2
+    echo "Setting ROUNDS='$ROUNDS' and/or ROUND_SIZE='$ROUND_SIZE' in the environment without also setting TEST to a specific test will cause ALL tests to be run $(( $ROUNDS * $ROUND_SIZE )) times, which will consume a large number of agents! We recommend doing stability testing on ONE test at a time. If you're certain you want to do this, set TEST='.*' to run all tests $(( $ROUNDS * $ROUND_SIZE )) times." 1>&2
+    [[ "$BUILDKITE" == 'true' ]] && cat | buildkite-agent annotate --append --style 'error' --context 'no-TEST' <<-MD
+    Your build was cancelled because you set \`ROUNDS\` and/or \`ROUND_SIZE\` without also setting \`TEST\` in your build environment. This would cause each test to be run $(( $ROUNDS * $ROUND_SIZE )) times, which will consume a lot of Buildkite agents.
+
+    We recommend stability testing one test at a time by setting \`TEST\` equal to the test name. Alternatively, you can specify a set of test names using [Perl-Compatible Regular Expressions](https://www.debuggex.com/cheatsheet/regex/pcre), where \`TEST\` is parsed as \`^${TEST}$\`.
+
+    If you _really_ meant to run every test $(( $ROUNDS * $ROUND_SIZE )) times, set \`TEST='.*'\`.
+MD
+    exit 255
+elif [[ "$TEST" = '.*' ]]; then # if they want to run every test, just spawn the jobs like normal
+    unset TEST
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 fi
 # Determine if it's a forked PR and make sure to add git fetch so we don't have to git clone the forked repo's url
 if [[ $BUILDKITE_BRANCH =~ ^pull/[0-9]+/head: ]]; then
@@ -184,8 +216,7 @@ EOF
 EOF
     fi
 done
-cat <<EOF
-
+[[ -z "$TEST" ]] && cat <<EOF
   - label: ":docker: Docker - Build and Install"
     command: "./.cicd/installation-build.sh"
     env:
@@ -196,6 +227,8 @@ cat <<EOF
     timeout: ${TIMEOUT:-180}
     skip: ${SKIP_INSTALL}${SKIP_LINUX}${SKIP_DOCKER}
 
+EOF
+cat <<EOF
   - wait
 
 EOF
@@ -207,7 +240,7 @@ if [[ "$DCMAKE_BUILD_TYPE" != 'Debug' ]]; then
         echo "    # round $ROUND of $ROUNDS"
         # parallel tests
         echo '    # parallel tests'
-        echo $PLATFORMS_JSON_ARRAY | jq -cr '.[]' | while read -r PLATFORM_JSON; do
+        [[ -z "$TEST" ]] && echo $PLATFORMS_JSON_ARRAY | jq -cr '.[]' | while read -r PLATFORM_JSON; do
             if [[ ! "$(echo "$PLATFORM_JSON" | jq -r .FILE_NAME)" =~ 'macos' ]]; then
                 cat <<EOF
   - label: "$(echo "$PLATFORM_JSON" | jq -r .ICON) $(echo "$PLATFORM_JSON" | jq -r .PLATFORM_NAME_FULL) - Unit Tests"
@@ -261,11 +294,10 @@ EOF
 
 EOF
             fi
-        echo
         done
         # wasm spec tests
         echo '    # wasm spec tests'
-        echo $PLATFORMS_JSON_ARRAY | jq -cr '.[]' | while read -r PLATFORM_JSON; do
+        [[ -z "$TEST" ]] && echo $PLATFORMS_JSON_ARRAY | jq -cr '.[]' | while read -r PLATFORM_JSON; do
             if [[ ! "$(echo "$PLATFORM_JSON" | jq -r .FILE_NAME)" =~ 'macos' ]]; then
                 cat <<EOF
   - label: "$(echo "$PLATFORM_JSON" | jq -r .ICON) $(echo "$PLATFORM_JSON" | jq -r .PLATFORM_NAME_FULL) - WASM Spec Tests"
@@ -316,13 +348,16 @@ EOF
 
 EOF
             fi
-        echo
         done
         # serial tests
         echo '    # serial tests'
         echo $PLATFORMS_JSON_ARRAY | jq -cr '.[]' | while read -r PLATFORM_JSON; do
             IFS=$oIFS
-            SERIAL_TESTS="$(cat tests/CMakeLists.txt | grep nonparallelizable_tests | grep -v "^#" | awk -F" " '{ print $2 }')"
+            if [[ -z "$TEST" ]]; then
+                SERIAL_TESTS="$(cat tests/CMakeLists.txt | grep nonparallelizable_tests | grep -v "^#" | awk -F ' ' '{ print $2 }' | sort | uniq)"
+            else
+                SERIAL_TESTS="$(cat tests/CMakeLists.txt | grep -v "^#" | awk -F ' ' '{ print $2 }' | sort | uniq | grep -P "^$TEST$" | awk "{while(i++<$ROUND_SIZE)print;i=0}")"
+            fi
             for TEST_NAME in $SERIAL_TESTS; do
                 if [[ ! "$(echo "$PLATFORM_JSON" | jq -r .FILE_NAME)" =~ 'macos' ]]; then
                     cat <<EOF
@@ -374,15 +409,14 @@ EOF
 
 EOF
                 fi
-                echo
             done
             IFS=$nIFS
         done
         # long-running tests
         echo '    # long-running tests'
-        echo $PLATFORMS_JSON_ARRAY | jq -cr '.[]' | while read -r PLATFORM_JSON; do
+        [[ -z "$TEST" ]] && echo $PLATFORMS_JSON_ARRAY | jq -cr '.[]' | while read -r PLATFORM_JSON; do
             IFS=$oIFS
-            LR_TESTS="$(cat tests/CMakeLists.txt | grep long_running_tests | grep -v "^#" | awk -F" " '{ print $2 }')"
+            LR_TESTS="$(cat tests/CMakeLists.txt | grep long_running_tests | grep -v "^#" | awk -F" " '{ print $2 }' | sort | uniq)"
             for TEST_NAME in $LR_TESTS; do
                 if [[ ! "$(echo "$PLATFORM_JSON" | jq -r .FILE_NAME)" =~ 'macos' ]]; then
                     cat <<EOF
@@ -434,13 +468,24 @@ EOF
 
 EOF
                 fi
-                echo
             done
             IFS=$nIFS
         done
         IFS=$oIFS
+<<<<<<< HEAD
         if [[ ! "$PINNED" == 'false' || "$SKIP_MULTIVERSION_TEST" == 'false' ]]; then
             cat <<EOF
+=======
+        if [[ "$ROUND" != "$ROUNDS" ]]; then
+            echo '  - wait: ~'
+            [[ "$BUILDKITE_SOURCE" == 'schedule' || "$CONTINUE_ON_FAILURE" == 'true' ]] && echo '    continue_on_failure: true'
+            echo ''
+        fi
+    done
+    # Execute multiversion test
+    if [[ -z "$TEST" && ( ! "$PINNED" == 'false' || "$SKIP_MULTIVERSION_TEST" == 'false' ) ]]; then
+        cat <<EOF
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
   - label: ":pipeline: Multiversion Test"
     command:
       - "buildkite-agent artifact download build.tar.gz . --step ':ubuntu: Ubuntu 18.04 - Build' && tar -xzf build.tar.gz"
@@ -462,7 +507,7 @@ EOF
     done
     
     # trigger eosio-lrt post pr
-    if [[ -z $BUILDKITE_TRIGGERED_FROM_BUILD_ID && $TRIGGER_JOB == "true" ]]; then
+    if [[ -z "$TEST" && -z $BUILDKITE_TRIGGERED_FROM_BUILD_ID && $TRIGGER_JOB == "true" ]]; then
         if ( [[ ! $PINNED == false ]] ); then
             cat <<EOF
   - label: ":pipeline: Trigger Long Running Tests"
@@ -485,12 +530,11 @@ EOF
         fi
     fi
     # trigger eosio-sync-from-genesis for every build
-    if [[ "$BUILDKITE_PIPELINE_SLUG" == 'eosio' && -z "${SKIP_INSTALL}${SKIP_LINUX}${SKIP_DOCKER}${SKIP_SYNC_TESTS}" ]]; then
+    if [[ -z "$TEST" && "$BUILDKITE_PIPELINE_SLUG" == 'eosio' && -z "${SKIP_INSTALL}${SKIP_LINUX}${SKIP_DOCKER}${SKIP_SYNC_TESTS}" ]]; then
         cat <<EOF
   - label: ":chains: Sync from Genesis Test"
     trigger: "eosio-sync-from-genesis"
     async: false
-    if: build.env("BUILDKITE_TAG") == null
     build:
       message: "Triggered by $BUILDKITE_PIPELINE_SLUG build $BUILDKITE_BUILD_NUMBER"
       commit: "${BUILDKITE_COMMIT}"
@@ -505,12 +549,11 @@ EOF
 EOF
     fi
     # trigger eosio-resume-from-state for every build
-    if [[ "$BUILDKITE_PIPELINE_SLUG" == 'eosio' && -z "${SKIP_INSTALL}${SKIP_LINUX}${SKIP_DOCKER}${SKIP_SYNC_TESTS}" ]]; then
+    if [[ -z "$TEST" && "$BUILDKITE_PIPELINE_SLUG" == 'eosio' && -z "${SKIP_INSTALL}${SKIP_LINUX}${SKIP_DOCKER}${SKIP_SYNC_TESTS}" ]]; then
         cat <<EOF
   - label: ":outbox_tray: Resume from State Test"
     trigger: "eosio-resume-from-state"
     async: false
-    if: build.env("BUILDKITE_TAG") == null
     build:
       message: "Triggered by $BUILDKITE_PIPELINE_SLUG build $BUILDKITE_BUILD_NUMBER"
       commit: "${BUILDKITE_COMMIT}"
@@ -527,7 +570,7 @@ EOF
 fi
 # pipeline tail
 cat <<EOF
-  - wait:
+  - wait: ~
     continue_on_failure: true
 
   - label: ":bar_chart: Test Metrics"
@@ -547,6 +590,8 @@ cat <<EOF
     timeout: ${TIMEOUT:-10}
     soft_fail: true
 
+EOF
+[[ -z "$TEST" ]] && cat <<EOF
   - wait
 
     # packaging
@@ -561,6 +606,33 @@ cat <<EOF
       PKGTYPE: "rpm"
     agents:
       queue: "$BUILDKITE_TEST_AGENT_QUEUE"
+    key: "centos7pb"
+    timeout: ${TIMEOUT:-10}
+    skip: ${SKIP_CENTOS_7_7}${SKIP_PACKAGE_BUILDER}${SKIP_LINUX}
+
+  - label: ":centos: CentOS 7 - Test Package"
+    command:
+      - "buildkite-agent artifact download '*.rpm' . --step ':centos: CentOS 7.7 - Package Builder' --agent-access-token \$\$BUILDKITE_AGENT_ACCESS_TOKEN"
+      - "./.cicd/test-package.docker.sh"
+    env:
+      IMAGE: "centos:7"
+    agents:
+      queue: "$BUILDKITE_TEST_AGENT_QUEUE"
+    depends_on: "centos7pb"
+    allow_dependency_failure: false
+    timeout: ${TIMEOUT:-10}
+    skip: ${SKIP_CENTOS_7_7}${SKIP_PACKAGE_BUILDER}${SKIP_LINUX}
+
+  - label: ":aws: Amazon Linux 2 - Test Package"
+    command:
+      - "buildkite-agent artifact download '*.rpm' . --step ':centos: CentOS 7.7 - Package Builder' --agent-access-token \$\$BUILDKITE_AGENT_ACCESS_TOKEN"
+      - "./.cicd/test-package.docker.sh"
+    env:
+      IMAGE: "amazonlinux:2"
+    agents:
+      queue: "$BUILDKITE_TEST_AGENT_QUEUE"
+    depends_on: "centos7pb"
+    allow_dependency_failure: false
     timeout: ${TIMEOUT:-10}
     skip: ${SKIP_CENTOS_7_7}${SKIP_PACKAGE_BUILDER}${SKIP_LINUX}
 
@@ -589,6 +661,20 @@ cat <<EOF
       PKGTYPE: "deb"
     agents:
       queue: "$BUILDKITE_TEST_AGENT_QUEUE"
+    key: "ubuntu1604pb"
+    timeout: ${TIMEOUT:-10}
+    skip: ${SKIP_UBUNTU_16_04}${SKIP_PACKAGE_BUILDER}${SKIP_LINUX}
+
+  - label: ":ubuntu: Ubuntu 16.04 - Test Package"
+    command:
+      - "buildkite-agent artifact download '*.deb' . --step ':ubuntu: Ubuntu 16.04 - Package Builder' --agent-access-token \$\$BUILDKITE_AGENT_ACCESS_TOKEN"
+      - "./.cicd/test-package.docker.sh"
+    env:
+      IMAGE: "ubuntu:16.04"
+    agents:
+      queue: "$BUILDKITE_TEST_AGENT_QUEUE"
+    depends_on: "ubuntu1604pb"
+    allow_dependency_failure: false
     timeout: ${TIMEOUT:-10}
     skip: ${SKIP_UBUNTU_16_04}${SKIP_PACKAGE_BUILDER}${SKIP_LINUX}
 
@@ -603,6 +689,20 @@ cat <<EOF
       PKGTYPE: "deb"
     agents:
       queue: "$BUILDKITE_TEST_AGENT_QUEUE"
+    key: "ubuntu1804pb"
+    timeout: ${TIMEOUT:-10}
+    skip: ${SKIP_UBUNTU_18_04}${SKIP_PACKAGE_BUILDER}${SKIP_LINUX}
+
+  - label: ":ubuntu: Ubuntu 18.04 - Test Package"
+    command:
+      - "buildkite-agent artifact download '*.deb' . --step ':ubuntu: Ubuntu 18.04 - Package Builder' --agent-access-token \$\$BUILDKITE_AGENT_ACCESS_TOKEN"
+      - "./.cicd/test-package.docker.sh"
+    env:
+      IMAGE: "ubuntu:18.04"
+    agents:
+      queue: "$BUILDKITE_TEST_AGENT_QUEUE"
+    depends_on: "ubuntu1804pb"
+    allow_dependency_failure: false
     timeout: ${TIMEOUT:-10}
     skip: ${SKIP_UBUNTU_18_04}${SKIP_PACKAGE_BUILDER}${SKIP_LINUX}
 
@@ -643,19 +743,32 @@ cat <<EOF
           cd: ~
     agents:
       - "queue=mac-anka-node-fleet"
+    key: "macos1014pb"
     timeout: ${TIMEOUT:-30}
     skip: ${SKIP_MACOS_10_14}${SKIP_PACKAGE_BUILDER}${SKIP_MAC}
 
+<<<<<<< HEAD
   - label: ":darwin: macOS 10.15 - Package Builder"
     command:
       - "git clone \$BUILDKITE_REPO eos && cd eos && $GIT_FETCH git checkout -f \$BUILDKITE_COMMIT"
       - "cd eos && buildkite-agent artifact download build.tar.gz . --step ':darwin: macOS 10.15 - Build' && tar -xzf build.tar.gz"
       - "cd eos && ./.cicd/package.sh"
+=======
+  - label: ":darwin: macOS 10.14 - Test Package"
+    command:
+      - "git clone \$BUILDKITE_REPO eos && cd eos && $GIT_FETCH git checkout -f \$BUILDKITE_COMMIT"
+      - "cd eos && buildkite-agent artifact download '*' . --step ':darwin: macOS 10.14 - Package Builder' --agent-access-token \$\$BUILDKITE_AGENT_ACCESS_TOKEN"
+      - "cd eos && ./.cicd/test-package.anka.sh"
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
     plugins:
       - EOSIO/anka#v0.6.1:
           no-volume: true
           inherit-environment-vars: true
+<<<<<<< HEAD
           vm-name: 10.15.5_6C_14G_80G
+=======
+          vm-name: 10.14.6_6C_14G_80G
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
           vm-registry-tag: "clean::cicd::git-ssh::nas::brew::buildkite-agent"
           always-pull: true
           debug: true
@@ -669,8 +782,15 @@ cat <<EOF
           cd: ~
     agents:
       - "queue=mac-anka-node-fleet"
+<<<<<<< HEAD
     timeout: ${TIMEOUT:-30}
     skip: ${SKIP_MACOS_10_15}${SKIP_PACKAGE_BUILDER}${SKIP_MAC}
+=======
+    depends_on: "macos1014pb"
+    allow_dependency_failure: false
+    timeout: ${TIMEOUT:-10}
+    skip: ${SKIP_MACOS_10_14}${SKIP_PACKAGE_BUILDER}${SKIP_MAC}
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
   - label: ":docker: Docker - Label Container with Git Branch and Git Tag"
     command: .cicd/docker-tag.sh
@@ -696,7 +816,7 @@ cat <<EOF
       - "buildkite-agent artifact upload eosio.rb"
     agents:
       queue: "automation-basic-builder-fleet"
-    timeout: "${TIMEOUT:-5}"
+    timeout: ${TIMEOUT:-5}
     skip: ${SKIP_PACKAGE_BUILDER}${SKIP_MAC}${SKIP_MACOS_10_14}
 
   - label: ":docker: :ubuntu: Docker - Build 18.04 Docker Image"

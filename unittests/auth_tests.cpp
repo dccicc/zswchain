@@ -241,17 +241,17 @@ BOOST_AUTO_TEST_CASE(link_auths) { try {
    // Send req auth action with alice's spending key, it should fail
    BOOST_CHECK_THROW(chain.push_reqauth(name("alice"), { permission_level{"alice"_n, name("spending")} }, { spending_priv_key }), irrelevant_auth_exception);
    // Link authority for eosio reqauth action with alice's spending key
-   chain.link_authority(name("alice"), name("eosio"), name("spending"), name("reqauth"));
+   chain.link_authority(name("alice"), name("zswhq"), name("spending"), name("reqauth"));
    // Now, req auth action with alice's spending key should succeed
    chain.push_reqauth(name("alice"), { permission_level{"alice"_n, name("spending")} }, { spending_priv_key });
 
    chain.produce_block();
 
    // Relink the same auth should fail
-   BOOST_CHECK_THROW( chain.link_authority(name("alice"), name("eosio"), name("spending"), name("reqauth")), action_validate_exception);
+   BOOST_CHECK_THROW( chain.link_authority(name("alice"), name("zswhq"), name("spending"), name("reqauth")), action_validate_exception);
 
    // Unlink alice with eosio reqauth
-   chain.unlink_authority(name("alice"), name("eosio"), name("reqauth"));
+   chain.unlink_authority(name("alice"), name("zswhq"), name("reqauth"));
    // Now, req auth action with alice's spending key should fail
    BOOST_CHECK_THROW(chain.push_reqauth(name("alice"), { permission_level{"alice"_n, name("spending")} }, { spending_priv_key }), irrelevant_auth_exception);
 
@@ -260,7 +260,7 @@ BOOST_AUTO_TEST_CASE(link_auths) { try {
    // Send req auth action with scud key, it should fail
    BOOST_CHECK_THROW(chain.push_reqauth(name("alice"), { permission_level{"alice"_n, name("scud")} }, { scud_priv_key }), irrelevant_auth_exception);
    // Link authority for any eosio action with alice's scud key
-   chain.link_authority(name("alice"), name("eosio"), name("scud"));
+   chain.link_authority(name("alice"), name("zswhq"), name("scud"));
    // Now, req auth action with alice's scud key should succeed
    chain.push_reqauth(name("alice"), { permission_level{"alice"_n, name("scud")} }, { scud_priv_key });
    // req auth action with alice's spending key should also be fine, since it is the parent of alice's scud key
@@ -280,8 +280,13 @@ BOOST_AUTO_TEST_CASE(link_then_update_auth) { try {
 
    chain.set_authority(name("alice"), name("first"), first_pub_key, name("active"));
 
+<<<<<<< HEAD
    chain.link_authority(name("alice"), name("eosio"), name("first"), name("reqauth"));
    chain.push_reqauth(name("alice"), { permission_level{"alice"_n, name("first")} }, { first_priv_key });
+=======
+   chain.link_authority(name("alice"), name("zswhq"), name("first"), name("reqauth"));
+   chain.push_reqauth(name("alice"), { permission_level{N(alice), name("first")} }, { first_priv_key });
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
    chain.produce_blocks(13); // Wait at least 6 seconds for first push_reqauth transaction to expire.
 
@@ -325,11 +330,11 @@ try {
 
 
    // Creating account with eosio. prefix with privileged account
-   chain.create_account(name("eosio.test1"));
+   chain.create_account(name("zswhq.test1"));
 
    // Creating account with eosio. prefix with non-privileged account, should fail
-   BOOST_CHECK_EXCEPTION(chain.create_account(name("eosio.test2"), name("joe")), action_validate_exception,
-                         fc_exception_message_is("only privileged accounts can have names that start with 'eosio.'"));
+   BOOST_CHECK_EXCEPTION(chain.create_account(name("zswhq.test2"), name("joe")), action_validate_exception,
+                         fc_exception_message_is("only privileged accounts can have names that start with 'zswhq.'"));
 
 } FC_LOG_AND_RETHROW() }
 
@@ -354,8 +359,8 @@ BOOST_AUTO_TEST_CASE( any_auth ) { try {
 
    //test.push_reqauth( "alice"_n, { permission_level{"alice"_n,"spending"} }, { spending_priv_key });
 
-   chain.link_authority( name("alice"), name("eosio"), name("eosio.any"), name("reqauth") );
-   chain.link_authority( name("bob"), name("eosio"), name("eosio.any"), name("reqauth") );
+   chain.link_authority( name("alice"), name("zswhq"), name("zswhq.any"), name("reqauth") );
+   chain.link_authority( name("bob"), name("zswhq"), name("zswhq.any"), name("reqauth") );
 
    /// this should succeed because eosio::reqauth is linked to any permission
    chain.push_reqauth(name("alice"), { permission_level{"alice"_n, name("spending")} }, { spending_priv_key });
@@ -504,7 +509,7 @@ BOOST_AUTO_TEST_CASE( linkauth_special ) { try {
       BOOST_REQUIRE_EXCEPTION(
          chain.push_action(config::system_account_name, linkauth::get_name(), tester_account, fc::mutable_variant_object()
                ("account", "tester")
-               ("code", "eosio")
+               ("code", "zswhq")
                ("type", type)
                ("requirement", "first")),
          action_validate_exception,

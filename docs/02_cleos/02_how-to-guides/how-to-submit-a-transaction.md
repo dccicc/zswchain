@@ -41,7 +41,7 @@ You can create the JSON snippet defining the transaction in two ways:
   "delay_sec": 0,
   "context_free_actions": [],
   "actions": [{
-      "account": "eosio.token",
+      "account": "zswhq.token",
       "name": "transfer",
       "authorization": [{
           "actor": "han",
@@ -71,7 +71,7 @@ You can create the JSON snippet defining the transaction in two ways:
   "delay_sec": 0,
   "context_free_actions": [],
   "actions": [{
-      "account": "eosio.token",
+      "account": "zswhq.token",
       "name": "transfer",
       "authorization": [{
           "actor": "han",

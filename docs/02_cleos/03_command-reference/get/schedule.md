@@ -21,7 +21,7 @@ This command simply returns the current producer schedule.
 active schedule version 0
     Producer      Producer key
     ============= ==================
-    eosio         EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
+    eosio         PUB_K1_5mk8TsUDDszMJPte932L3n5P2hBbBhDfeyDV6feMaYWvPE1hYk
 
 pending schedule empty
 

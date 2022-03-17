@@ -3022,7 +3022,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(permission_usage_tests, TESTER_T, backing_store_ts
 
    t.push_action(config::system_account_name, linkauth::get_name(), "bob"_n, fc::mutable_variant_object()
            ("account", "bob")
-           ("code", "eosio")
+           ("code", "zswhq")
            ("type", "reqauth")
            ("requirement", "perm1")
    );

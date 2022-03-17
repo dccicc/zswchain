@@ -20,8 +20,13 @@ set( CMAKE_CXX_EXTENSIONS ON )
 set( CXX_STANDARD_REQUIRED ON)
 
 set(VERSION_MAJOR 2)
+<<<<<<< HEAD
 set(VERSION_MINOR 1)
 set(VERSION_PATCH 0)
+=======
+set(VERSION_MINOR 0)
+set(VERSION_PATCH 13)
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 #set(VERSION_SUFFIX rc3)
 
 if(VERSION_SUFFIX)
@@ -157,7 +162,7 @@ endif()
 message( STATUS "Using '${CORE_SYMBOL_NAME}' as CORE symbol name" )
 
 if ("${EOSIO_ROOT_KEY}" STREQUAL "")
-   set(EOSIO_ROOT_KEY "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV")
+   set(EOSIO_ROOT_KEY "PUB_K1_5mk8TsUDDszMJPte932L3n5P2hBbBhDfeyDV6feMaYWvPE1hYk")
 endif()
 
 message( STATUS "Using '${EOSIO_ROOT_KEY}' as public key for 'eosio' account" )

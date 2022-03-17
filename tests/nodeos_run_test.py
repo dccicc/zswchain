@@ -321,8 +321,8 @@ try:
         errorExit("FAILURE - get code currency1111 failed", raw=True)
 
     contractDir="unittests/contracts/eosio.token"
-    wasmFile="eosio.token.wasm"
-    abiFile="eosio.token.abi"
+    wasmFile="zswhq.token.wasm"
+    abiFile="zswhq.token.abi"
     Print("Publish contract")
     trans=node.publishContract(currencyAccount, contractDir, wasmFile, abiFile, waitForTransBlock=True)
     if trans is None:

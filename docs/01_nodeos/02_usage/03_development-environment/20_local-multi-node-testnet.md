@@ -71,11 +71,11 @@ Without password imported keys will not be retrievable.
 The private blockchain launched in the steps above is created with a default initial key which must be loaded into the wallet.
 
 ```sh
-cleos --wallet-url http://127.0.0.1:8899 wallet import --private-key 5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3
+cleos --wallet-url http://127.0.0.1:8899 wallet import --private-key 5KUhXKkRG9hST5x579mU26zAimAaRFWpxC3jHZoYqoBt9GZxdcJ
 ```
 
 ```console
-imported private key for: EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
+imported private key for: PUB_K1_5mk8TsUDDszMJPte932L3n5P2hBbBhDfeyDV6feMaYWvPE1hYk
 ```
 
 ### 4. Start the First Producer Node
@@ -162,7 +162,7 @@ The output from this new node will show a little activity but will stop reportin
 At this point, the second `nodeos` is an idle producer. To turn it into an active producer, `inita` needs to be registered as a producer with the bios node, and the bios node needs to perform an action to update the producer schedule.
 
 ```sh
-cleos --wallet-url http://127.0.0.1:8899 push action eosio setprods "{ \"schedule\": [{\"producer_name\": \"inita\",\"block_signing_key\": \"EOS6hMjoWRF2L8x9YpeqtUEcsDKAyxSuM1APicxgRU1E3oyV5sDEg\"}]}" -p eosio@active
+cleos --wallet-url http://127.0.0.1:8899 push action eosio setprods "{ \"schedule\": [{\"producer_name\": \"inita\",\"block_signing_key\": \"EOS6hMjoWRF2L8x9YpeqtUEcsDKAyxSuM1APicxgRU1E3oyV5sDEg\"}]}" -p zswhq@active
 ```
 
 ```console

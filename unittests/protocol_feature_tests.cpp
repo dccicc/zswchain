@@ -710,11 +710,11 @@ BOOST_AUTO_TEST_CASE( fix_linkauth_restriction ) { try {
       );
    };
 
-   validate_disallow("eosio", "linkauth");
-   validate_disallow("eosio", "unlinkauth");
-   validate_disallow("eosio", "deleteauth");
-   validate_disallow("eosio", "updateauth");
-   validate_disallow("eosio", "canceldelay");
+   validate_disallow("zswhq", "linkauth");
+   validate_disallow("zswhq", "unlinkauth");
+   validate_disallow("zswhq", "deleteauth");
+   validate_disallow("zswhq", "updateauth");
+   validate_disallow("zswhq", "canceldelay");
 
    validate_disallow("currency", "linkauth");
    validate_disallow("currency", "unlinkauth");
@@ -737,11 +737,11 @@ BOOST_AUTO_TEST_CASE( fix_linkauth_restriction ) { try {
             ("requirement", "first"));
    };
 
-   validate_disallow("eosio", "linkauth");
-   validate_disallow("eosio", "unlinkauth");
-   validate_disallow("eosio", "deleteauth");
-   validate_disallow("eosio", "updateauth");
-   validate_disallow("eosio", "canceldelay");
+   validate_disallow("zswhq", "linkauth");
+   validate_disallow("zswhq", "unlinkauth");
+   validate_disallow("zswhq", "deleteauth");
+   validate_disallow("zswhq", "updateauth");
+   validate_disallow("zswhq", "canceldelay");
 
    validate_allowed("currency", "linkauth");
    validate_allowed("currency", "unlinkauth");
@@ -1593,7 +1593,11 @@ BOOST_AUTO_TEST_CASE( producer_schedule_change_extension_test ) { try {
       // re-sign the bad block
       auto header_bmroot = digest_type::hash( std::make_pair( bad_block->digest(), remote.control->head_block_state()->blockroot_merkle ) );
       auto sig_digest = digest_type::hash( std::make_pair(header_bmroot, remote.control->head_block_state()->pending_schedule.schedule_hash) );
+<<<<<<< HEAD
       bad_block->producer_signature = remote.get_private_key("eosio"_n, "active").sign(sig_digest);
+=======
+      bad_block->producer_signature = remote.get_private_key(N(zswhq), "active").sign(sig_digest);
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
       // ensure it is rejected as an unknown extension
       BOOST_REQUIRE_EXCEPTION(
@@ -1612,7 +1616,11 @@ BOOST_AUTO_TEST_CASE( producer_schedule_change_extension_test ) { try {
       // re-sign the bad block
       auto header_bmroot = digest_type::hash( std::make_pair( bad_block->digest(), remote.control->head_block_state()->blockroot_merkle ) );
       auto sig_digest = digest_type::hash( std::make_pair(header_bmroot, remote.control->head_block_state()->pending_schedule.schedule_hash) );
+<<<<<<< HEAD
       bad_block->producer_signature = remote.get_private_key("eosio"_n, "active").sign(sig_digest);
+=======
+      bad_block->producer_signature = remote.get_private_key(N(zswhq), "active").sign(sig_digest);
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
       // ensure it is accepted (but rejected because it doesn't match expected state)
       BOOST_REQUIRE_EXCEPTION(
@@ -1640,7 +1648,11 @@ BOOST_AUTO_TEST_CASE( producer_schedule_change_extension_test ) { try {
       // re-sign the bad block
       auto header_bmroot = digest_type::hash( std::make_pair( bad_block->digest(), remote.control->head_block_state()->blockroot_merkle ) );
       auto sig_digest = digest_type::hash( std::make_pair(header_bmroot, remote.control->head_block_state()->pending_schedule.schedule_hash) );
+<<<<<<< HEAD
       bad_block->producer_signature = remote.get_private_key("eosio"_n, "active").sign(sig_digest);
+=======
+      bad_block->producer_signature = remote.get_private_key(N(zswhq), "active").sign(sig_digest);
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
       // ensure it is rejected because it doesn't match expected state (but the extention was accepted)
       BOOST_REQUIRE_EXCEPTION(
@@ -1659,7 +1671,11 @@ BOOST_AUTO_TEST_CASE( producer_schedule_change_extension_test ) { try {
       // re-sign the bad block
       auto header_bmroot = digest_type::hash( std::make_pair( bad_block->digest(), remote.control->head_block_state()->blockroot_merkle ) );
       auto sig_digest = digest_type::hash( std::make_pair(header_bmroot, remote.control->head_block_state()->pending_schedule.schedule_hash) );
+<<<<<<< HEAD
       bad_block->producer_signature = remote.get_private_key("eosio"_n, "active").sign(sig_digest);
+=======
+      bad_block->producer_signature = remote.get_private_key(N(zswhq), "active").sign(sig_digest);
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
       // ensure it is rejected because the new_producers field is not null
       BOOST_REQUIRE_EXCEPTION(
@@ -1683,8 +1699,13 @@ BOOST_AUTO_TEST_CASE( wtmsig_block_signing_inflight_legacy_test ) { try {
 
    // activate the feature, and start an in-flight producer schedule change with the legacy format
    c.preactivate_protocol_features( {*d} );
+<<<<<<< HEAD
    vector<legacy::producer_key> sched = {{"eosio"_n, c.get_public_key("eosio"_n, "bsk")}};
    c.push_action(config::system_account_name, "setprods"_n, config::system_account_name, fc::mutable_variant_object()("schedule", sched));
+=======
+   vector<legacy::producer_key> sched = {{N(zswhq), c.get_public_key(N(zswhq), "bsk")}};
+   c.push_action(config::system_account_name, N(setprods), config::system_account_name, fc::mutable_variant_object()("schedule", sched));
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
    c.produce_block();
 
    // ensure the last legacy block contains a new_producers
@@ -1698,7 +1719,11 @@ BOOST_AUTO_TEST_CASE( wtmsig_block_signing_inflight_legacy_test ) { try {
    BOOST_REQUIRE_EXCEPTION( c.produce_block(), no_block_signatures, fc_exception_message_is( "Signer returned no signatures" ));
    c.control->abort_block();
 
+<<<<<<< HEAD
    c.block_signing_private_keys.emplace(get_public_key("eosio"_n, "bsk"), get_private_key("eosio"_n, "bsk"));
+=======
+   c.block_signing_private_keys.emplace(get_public_key(N(zswhq), "bsk"), get_private_key(N(zswhq), "bsk"));
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
    c.produce_block();
 
 } FC_LOG_AND_RETHROW() }
@@ -1717,8 +1742,13 @@ BOOST_AUTO_TEST_CASE( wtmsig_block_signing_inflight_extension_test ) { try {
    c.produce_block();
 
    // start an in-flight producer schedule change before the activation is availble to header only validators
+<<<<<<< HEAD
    vector<legacy::producer_key> sched = {{"eosio"_n, c.get_public_key("eosio"_n, "bsk")}};
    c.push_action(config::system_account_name, "setprods"_n, config::system_account_name, fc::mutable_variant_object()("schedule", sched));
+=======
+   vector<legacy::producer_key> sched = {{N(zswhq), c.get_public_key(N(zswhq), "bsk")}};
+   c.push_action(config::system_account_name, N(setprods), config::system_account_name, fc::mutable_variant_object()("schedule", sched));
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
    c.produce_block();
 
    // ensure the first possible new block contains a producer_schedule_change_extension
@@ -1734,7 +1764,11 @@ BOOST_AUTO_TEST_CASE( wtmsig_block_signing_inflight_extension_test ) { try {
    BOOST_REQUIRE_EXCEPTION( c.produce_block(), no_block_signatures, fc_exception_message_is( "Signer returned no signatures" ));
    c.control->abort_block();
 
+<<<<<<< HEAD
    c.block_signing_private_keys.emplace(get_public_key("eosio"_n, "bsk"), get_private_key("eosio"_n, "bsk"));
+=======
+   c.block_signing_private_keys.emplace(get_public_key(N(zswhq), "bsk"), get_private_key(N(zswhq), "bsk"));
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
    c.produce_block();
 
 } FC_LOG_AND_RETHROW() }

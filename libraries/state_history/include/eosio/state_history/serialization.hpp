@@ -91,6 +91,33 @@ ST& operator<<(ST& ds, const eosio::state_history::big_vector_wrapper<T>& obj) {
    return ds;
 }
 
+<<<<<<< HEAD:libraries/state_history/include/eosio/state_history/serialization.hpp
+=======
+template <typename ST>
+inline void history_pack_varuint64(datastream<ST>& ds, uint64_t val) {
+   do {
+      uint8_t b = uint8_t(val) & 0x7f;
+      val >>= 7;
+      b |= ((val > 0) << 7);
+      ds.write((char*)&b, 1);
+   } while (val);
+}
+
+template <typename ST>
+void history_pack_big_bytes(datastream<ST>& ds, const eosio::chain::bytes& v) {
+   history_pack_varuint64(ds, v.size());
+   if (v.size())
+      ds.write(&v.front(), v.size());
+}
+
+template <typename ST>
+void history_pack_big_bytes(datastream<ST>& ds, const fc::optional<eosio::chain::bytes>& v) {
+   fc::raw::pack(ds, v.valid());
+   if (v)
+      history_pack_big_bytes(ds, *v);
+}
+
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7:plugins/state_history_plugin/include/eosio/state_history_plugin/state_history_serialization.hpp
 template <typename ST, typename T>
 ST& operator<<(ST& ds, const history_serial_wrapper<std::vector<T>>& obj) {
    return history_serialize_container(ds, obj.db, obj.obj);

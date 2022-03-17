@@ -1,6 +1,6 @@
-## Goal
+## Overview
 
-Query infomation of an EOSIO account
+This how-to guide provides instructions on how to query infomation of an EOSIO account. The example in this how-to guide retrieves information of the `eosio` account. 
 
 ## Before you begin
 
@@ -8,18 +8,37 @@ Query infomation of an EOSIO account
 
 [[info | Note]]
 | The cleos tool is bundled with the EOSIO software. [Installing EOSIO](../../00_install/index.md) will also install the cleos tool. 
+<<<<<<< HEAD
 
 * Acquire functional understanding of [EOSIO Accounts and Permissions](https://developers.eos.io/welcome/v2.1/protocol/accounts_and_permissions)
 
+=======
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
-## Steps
+* Acquire functional understanding of [EOSIO Accounts and Permissions](https://developers.eos.io/welcome/v2.1/protocol/accounts_and_permissions)
 
-Execute the command below:
+## Command Reference
+
+See the following reference guide for command line usage and related options for the cleos command:
+
+* [`cleos get account`](../03_command-reference/get/account.md) command and its parameters
+
+## Procedure
+
+The following step shows how to query information of the `eosio` account:
+
+1. Run the following command:
 
 ```sh
-cleos get account ACCOUNT_NAME
+cleos get account eosio
 ```
+<<<<<<< HEAD
 Where ACCOUNT_NAME = name of the existing account in the EOSIO blockchain.
+=======
+**Where**:
+
+* `eosio` = The name of the default system account in the EOSIO blockchain.
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
 **Example Output**
 
@@ -27,8 +46,8 @@ Where ACCOUNT_NAME = name of the existing account in the EOSIO blockchain.
 created: 2018-06-01T12:00:00.000
 privileged: true
 permissions:
-     owner     1:    1 EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
-        active     1:    1 EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
+     owner     1:    1 PUB_K1_5mk8TsUDDszMJPte932L3n5P2hBbBhDfeyDV6feMaYWvPE1hYk
+        active     1:    1 PUB_K1_5mk8TsUDDszMJPte932L3n5P2hBbBhDfeyDV6feMaYWvPE1hYk
 memory:
      quota:       unlimited  used:     3.004 KiB
 

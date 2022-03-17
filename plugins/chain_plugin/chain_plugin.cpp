@@ -3339,7 +3339,11 @@ read_only::get_account_results read_only::get_account( const get_account_params&
    if( abi_serializer::to_abi(code_account.abi, abi) ) {
       abi_serializer abis( abi, abi_serializer::create_yield_function( abi_serializer_max_time ) );
 
+<<<<<<< HEAD
       const auto token_code = "eosio.token"_n;
+=======
+      const auto token_code = N(zswhq.token);
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 
       auto core_symbol = extract_core_symbol();
 
@@ -3451,8 +3455,27 @@ chain::symbol read_only::extract_core_symbol()const {
    symbol core_symbol(0);
 
    // The following code makes assumptions about the contract deployed on eosio account (i.e. the system contract) and how it stores its data.
+<<<<<<< HEAD
    get_primary_key<detail::ram_market_exchange_state_t>("eosio"_n, "eosio"_n, "rammarket"_n, eosio::chain::string_to_symbol_c(4,"RAMCORE"),
 		      row_requirements::optional, row_requirements::optional, [&core_symbol](const detail::ram_market_exchange_state_t& ram_market_exchange_state) {
+=======
+   const auto& d = db.db();
+   const auto* t_id = d.find<chain::table_id_object, chain::by_code_scope_table>(boost::make_tuple( N(zswhq), N(zswhq), N(rammarket) ));
+   if( t_id != nullptr ) {
+      const auto &idx = d.get_index<key_value_index, by_scope_primary>();
+      auto it = idx.find(boost::make_tuple( t_id->id, eosio::chain::string_to_symbol_c(4,"RAMCORE") ));
+      if( it != idx.end() ) {
+         detail::ram_market_exchange_state_t ram_market_exchange_state;
+
+         fc::datastream<const char *> ds( it->value.data(), it->value.size() );
+
+         try {
+            fc::raw::unpack(ds, ram_market_exchange_state);
+         } catch( ... ) {
+            return core_symbol;
+         }
+
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
          if( ram_market_exchange_state.core_symbol.get_symbol().valid() ) {
             core_symbol = ram_market_exchange_state.core_symbol.get_symbol();
          }

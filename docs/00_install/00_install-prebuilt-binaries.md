@@ -29,6 +29,7 @@ sudo apt install ./eosio_2.1.0-1-ubuntu-20.04_amd64.deb
 ```
 #### Ubuntu 18.04 Package Install
 ```sh
+<<<<<<< HEAD
 wget https://github.com/eosio/eos/releases/download/v2.1.0/eosio_2.1.0-1-ubuntu-18.04_amd64.deb
 sudo apt install ./eosio_2.1.0-1-ubuntu-18.04_amd64.deb
 ```
@@ -36,6 +37,15 @@ sudo apt install ./eosio_2.1.0-1-ubuntu-18.04_amd64.deb
 ```sh
 wget https://github.com/eosio/eos/releases/download/v2.1.0/eosio_2.1.0-1-ubuntu-16.04_amd64.deb
 sudo apt install ./eosio_2.1.0-1-ubuntu-16.04_amd64.deb
+=======
+wget https://github.com/eosio/eos/releases/download/v2.0.13/eosio_2.0.13-1-ubuntu-18.04_amd64.deb
+sudo apt install ./eosio_2.0.13-1-ubuntu-18.04_amd64.deb
+```
+#### Ubuntu 16.04 Package Install
+```sh
+wget https://github.com/eosio/eos/releases/download/v2.0.13/eosio_2.0.13-1-ubuntu-16.04_amd64.deb
+sudo apt install ./eosio_2.0.13-1-ubuntu-16.04_amd64.deb
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 ```
 #### Ubuntu Package Uninstall
 ```sh
@@ -51,8 +61,13 @@ sudo yum install ./eosio-2.1.0-1.el7.x86_64.rpm
 ```
 #### RPM Package Install CentOS 8
 ```sh
+<<<<<<< HEAD
 wget https://github.com/eosio/eos/releases/download/v2.1.0/eosio-2.1.0-1.el8.x86_64.rpm
 sudo yum install ./eosio-2.1.0-1.el8.x86_64.rpm
+=======
+wget https://github.com/eosio/eos/releases/download/v2.0.13/eosio-2.0.13-1.el7.x86_64.rpm
+sudo yum install ./eosio-2.0.13-1.el7.x86_64.rpm
+>>>>>>> 1926c9588e98187e7666c14ab94ac800a6ca84d7
 ```
 #### RPM Package Uninstall
 ```sh
