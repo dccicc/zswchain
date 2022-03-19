@@ -64,6 +64,7 @@ if(APPLE AND UNIX AND "${OPENSSL_ROOT_DIR}" STREQUAL "")
    set(OPENSSL_ROOT_DIR "/home/ubuntu/g/gmssl")
 endif()
 
+set(OPENSSL_ROOT_DIR "/home/ubuntu/g/gmssl")
 # WASM runtimes to enable. Each runtime in this list will have:
 #  * definition EOSIO_<RUNTIME>_RUNTIME_ENABLED defined in public libchain interface
 #  * ctest entries with --runtime
