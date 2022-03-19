@@ -7,7 +7,7 @@ enable_testing()
 if ("${CMAKE_INSTALL_PREFIX}" STREQUAL "/usr/local")
    message(WARNING "CMAKE_INSTALL_PREFIX is set to /usr/local. This is not recommended.")
 endif()
-
+set(OPENSSL_USE_STATIC_LIBS TRUE)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
 
 if (UNIX AND APPLE)
@@ -59,8 +59,9 @@ set(BUILD_MONGO_DB_PLUGIN FALSE CACHE BOOL "Build mongo database plugin")
 set(ENABLE_MULTIVERSION_PROTOCOL_TEST FALSE CACHE BOOL "Enable nodeos multiversion protocol test")
 
 # add defaults for openssl
+set(OPENSSL_USE_STATIC_LIBS TRUE)
 if(APPLE AND UNIX AND "${OPENSSL_ROOT_DIR}" STREQUAL "")
-   set(OPENSSL_ROOT_DIR "/usr/local/opt/openssl@1.1")
+   set(OPENSSL_ROOT_DIR "/home/ubuntu/g/gmssl")
 endif()
 
 # WASM runtimes to enable. Each runtime in this list will have:
